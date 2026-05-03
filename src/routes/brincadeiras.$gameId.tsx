@@ -3,9 +3,10 @@ import { ArrowLeft } from "lucide-react";
 import { MINI_GAMES, type MiniGameId } from "@/data/miniGames";
 import { MemoryGame } from "@/components/games/MemoryGame";
 import { ChoiceQuiz } from "@/components/games/ChoiceQuiz";
+import { SpotDifferencesGame } from "@/components/games/SpotDifferencesGame";
 import { usePassport } from "@/context/PassportContext";
 
-const VALID: MiniGameId[] = ["memoria", "bandeiras", "safari", "sons", "monumentos"];
+const VALID: MiniGameId[] = ["memoria", "bandeiras", "safari", "sons", "monumentos", "seteerros"];
 
 export const Route = createFileRoute("/brincadeiras/$gameId")({
   component: GamePage,
@@ -74,6 +75,8 @@ function GamePage() {
       <main className="mx-auto max-w-3xl px-4 sm:px-6 py-10">
         {gameId === "memoria" ? (
           <MemoryGame />
+        ) : gameId === "seteerros" ? (
+          <SpotDifferencesGame />
         ) : (
           <ChoiceQuiz
             gameId={gameId as MiniGameId}
