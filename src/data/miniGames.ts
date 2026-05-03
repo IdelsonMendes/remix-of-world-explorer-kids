@@ -368,32 +368,74 @@ export const ALL_COUNTRY_NAMES = [
   "Portugal",
 ];
 
-// Cenas para o jogo "Sete Erros" — reutiliza imagens existentes.
-// O componente sobrepõe stickers (emojis) na imagem da direita em posições aleatórias.
-export const SCENE_IMAGES: { image: string; country: string; name: string }[] = [
-  { image: christRedeemer, country: "Brasil", name: "Cristo Redentor" },
-  { image: sugarloaf, country: "Brasil", name: "Pão de Açúcar" },
-  { image: lencois, country: "Brasil", name: "Lençóis Maranhenses" },
-  { image: liberty, country: "Estados Unidos", name: "Estátua da Liberdade" },
-  { image: rushmore, country: "Estados Unidos", name: "Monte Rushmore" },
-  { image: greatWall, country: "China", name: "Grande Muralha" },
-  { image: forbiddenCity, country: "China", name: "Cidade Proibida" },
-  { image: stBasil, country: "Rússia", name: "Catedral de São Basílio" },
-  { image: himeji, country: "Japão", name: "Castelo de Himeji" },
-  { image: mtFuji, country: "Japão", name: "Monte Fuji" },
-  { image: tableMountain, country: "África do Sul", name: "Table Mountain" },
-  { image: eiffel, country: "França", name: "Torre Eiffel" },
-  { image: montStMichel, country: "França", name: "Mont Saint-Michel" },
-  { image: colosseum, country: "Itália", name: "Coliseu" },
-  { image: pisa, country: "Itália", name: "Torre de Pisa" },
-  { image: operaHouse, country: "Austrália", name: "Casa de Ópera de Sydney" },
-  { image: uluru, country: "Austrália", name: "Uluru" },
-  { image: chichenItza, country: "México", name: "Chichén Itzá" },
+// Cenas do "Sete Erros": cada cena tem a imagem original, uma versão editada
+// (com as diferenças) e uma lista de zonas (x,y em %) onde estão as alterações.
+import christRedeemerDiff from "@/assets/monuments/christ-redeemer-diff.jpg";
+import eiffelDiff from "@/assets/monuments/eiffel-diff.jpg";
+import colosseumDiff from "@/assets/monuments/colosseum-diff.jpg";
+
+export type SpotDiffScene = {
+  id: string;
+  country: string;
+  name: string;
+  original: string;
+  modified: string;
+  // Zonas de diferença em coordenadas relativas (0-100). hint = dica curta.
+  diffs: { x: number; y: number; hint: string }[];
+};
+
+export const SPOT_DIFF_SCENES: SpotDiffScene[] = [
+  {
+    id: "cristo",
+    country: "Brasil",
+    name: "Cristo Redentor",
+    original: christRedeemer,
+    modified: christRedeemerDiff,
+    diffs: [
+      { x: 15, y: 15, hint: "Balão no céu" },
+      { x: 88, y: 15, hint: "Pássaros voando" },
+      { x: 88, y: 50, hint: "Helicóptero" },
+      { x: 50, y: 18, hint: "Cor do céu (nuvem rosada)" },
+      { x: 50, y: 55, hint: "Cor da túnica do Cristo" },
+      { x: 5, y: 93, hint: "Flor vermelha" },
+      { x: 88, y: 88, hint: "Vegetação removida" },
+    ],
+  },
+  {
+    id: "eiffel",
+    country: "França",
+    name: "Torre Eiffel",
+    original: eiffel,
+    modified: eiffelDiff,
+    diffs: [
+      { x: 12, y: 15, hint: "Nuvem nova" },
+      { x: 85, y: 15, hint: "Balão amarelo" },
+      { x: 50, y: 5, hint: "Bandeira no topo" },
+      { x: 18, y: 48, hint: "Pássaro laranja" },
+      { x: 10, y: 92, hint: "Banco vermelho" },
+      { x: 48, y: 95, hint: "Pessoa de azul" },
+      { x: 85, y: 90, hint: "Algo sumiu no caminho" },
+    ],
+  },
+  {
+    id: "coliseu",
+    country: "Itália",
+    name: "Coliseu",
+    original: colosseum,
+    modified: colosseumDiff,
+    diffs: [
+      { x: 18, y: 18, hint: "Pássaros no céu" },
+      { x: 50, y: 10, hint: "Avião" },
+      { x: 85, y: 8, hint: "Balão listrado" },
+      { x: 50, y: 38, hint: "Arco fechado" },
+      { x: 75, y: 40, hint: "Pedras avermelhadas" },
+      { x: 12, y: 93, hint: "Vespa vermelha" },
+      { x: 80, y: 90, hint: "Guarda-chuva amarelo" },
+    ],
+  },
 ];
 
-// Stickers (emojis) usados como "diferenças" sobrepostas
-export const SCENE_STICKERS = [
-  "🦜", "🌸", "⭐", "🎈", "🦋", "🍩", "🌈", "🚀",
-  "🐠", "🍕", "🎵", "🌻", "🍦", "🐝", "🎩", "🪁",
-];
+// Stickers (emojis) — não são mais usados pelo jogo Sete Erros, mantidos por compat.
+export const SCENE_STICKERS: string[] = [];
+
 
