@@ -1,95 +1,84 @@
-import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import { RotateCcw, Trophy, Check } from "lucide-react";
-import { SCENE_IMAGES, SCENE_STICKERS } from "@/data/miniGames";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { RotateCcw, Trophy, Check, Lightbulb } from "lucide-react";
+import { SPOT_DIFF_SCENES, type SpotDiffScene } from "@/data/miniGames";
 import { usePassport } from "@/context/PassportContext";
 
-type Sticker = {
-  id: number;
-  emoji: string;
-  x: number; // 0-100 (%)
-  y: number; // 0-100 (%)
-  size: number; // rem
-  rotate: number;
-  found: boolean;
-};
-
+const HIT_RADIUS = 9; // % distance tolerance for a click to count
 const NUM_DIFFS = 7;
 
-function shuffle<T>(arr: T[]): T[] {
-  return [...arr].sort(() => Math.random() - 0.5);
-}
-
-function rand(min: number, max: number) {
-  return Math.random() * (max - min) + min;
-}
-
-function buildStickers(): Sticker[] {
-  const emojis = shuffle(SCENE_STICKERS).slice(0, NUM_DIFFS);
-  const placed: Sticker[] = [];
-  let attempts = 0;
-  while (placed.length < NUM_DIFFS && attempts < 200) {
-    attempts++;
-    const x = rand(8, 88);
-    const y = rand(8, 88);
-    // avoid overlap (min distance ~14%)
-    if (placed.some((p) => Math.hypot(p.x - x, p.y - y) < 14)) continue;
-    placed.push({
-      id: placed.length,
-      emoji: emojis[placed.length],
-      x,
-      y,
-      size: rand(2, 3.2),
-      rotate: rand(-25, 25),
-      found: false,
-    });
-  }
-  return placed;
+function pickScene(prevId?: string): SpotDiffScene {
+  const pool = SPOT_DIFF_SCENES.filter((s) => s.id !== prevId);
+  const arr = pool.length ? pool : SPOT_DIFF_SCENES;
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
 export function SpotDifferencesGame() {
   const { setMiniGameScore } = usePassport();
-  const [seed, setSeed] = useState(0);
-  const scene = useMemo(() => {
-    void seed;
-    return SCENE_IMAGES[Math.floor(Math.random() * SCENE_IMAGES.length)];
-  }, [seed]);
-  const [stickers, setStickers] = useState<Sticker[]>(() => buildStickers());
+  const [scene, setScene] = useState<SpotDiffScene>(() => pickScene());
+  const [found, setFound] = useState<boolean[]>(() =>
+    new Array(scene.diffs.length).fill(false),
+  );
   const [mistakes, setMistakes] = useState(0);
   const [done, setDone] = useState(false);
-  const [flashWrong, setFlashWrong] = useState(false);
+  const [flashWrong, setFlashWrong] = useState<{ x: number; y: number } | null>(null);
+  const [hintIdx, setHintIdx] = useState<number | null>(null);
+  const imgRef = useRef<HTMLDivElement | null>(null);
+
+  const diffs = scene.diffs;
+  const foundCount = found.filter(Boolean).length;
+  const totalDiffs = Math.min(diffs.length, NUM_DIFFS);
 
   useEffect(() => {
-    setStickers(buildStickers());
-    setMistakes(0);
-    setDone(false);
-  }, [seed]);
-
-  const foundCount = stickers.filter((s) => s.found).length;
-
-  useEffect(() => {
-    if (foundCount === NUM_DIFFS && !done) {
+    if (foundCount >= totalDiffs && !done) {
       setDone(true);
-      const score = Math.max(20, 100 - mistakes * 10);
+      const score = Math.max(20, 100 - mistakes * 8);
       setMiniGameScore("seteerros", score);
     }
-  }, [foundCount, done, mistakes, setMiniGameScore]);
+  }, [foundCount, totalDiffs, done, mistakes, setMiniGameScore]);
 
-  const reset = () => setSeed((s) => s + 1);
-
-  const handleStickerClick = (id: number) => {
-    setStickers((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, found: true } : s)),
-    );
+  const reset = () => {
+    const next = pickScene(scene.id);
+    setScene(next);
+    setFound(new Array(next.diffs.length).fill(false));
+    setMistakes(0);
+    setDone(false);
+    setHintIdx(null);
   };
 
-  const handleWrongClick = (e: React.MouseEvent) => {
-    // Only count as a wrong click if it's the image itself (not a sticker button)
-    if ((e.target as HTMLElement).closest("button[data-sticker]")) return;
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (done) return;
-    setMistakes((m) => m + 1);
-    setFlashWrong(true);
-    setTimeout(() => setFlashWrong(false), 300);
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+    let hitIdx = -1;
+    let bestDist = Infinity;
+    diffs.forEach((d, i) => {
+      if (found[i]) return;
+      const dist = Math.hypot(d.x - x, d.y - y);
+      if (dist <= HIT_RADIUS && dist < bestDist) {
+        bestDist = dist;
+        hitIdx = i;
+      }
+    });
+
+    if (hitIdx >= 0) {
+      setFound((prev) => prev.map((v, i) => (i === hitIdx ? true : v)));
+    } else {
+      setMistakes((m) => m + 1);
+      setFlashWrong({ x, y });
+      setTimeout(() => setFlashWrong(null), 600);
+    }
+  };
+
+  const useHint = () => {
+    const remaining = diffs.map((_, i) => i).filter((i) => !found[i]);
+    if (!remaining.length) return;
+    const pick = remaining[Math.floor(Math.random() * remaining.length)];
+    setHintIdx(pick);
+    setMistakes((m) => m + 1); // dica custa um "erro"
+    setTimeout(() => setHintIdx(null), 1800);
   };
 
   return (
@@ -101,16 +90,24 @@ export function SpotDifferencesGame() {
             {scene.name} <span className="text-foreground/50">— {scene.country}</span>
           </p>
         </div>
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="text-sm font-bold rounded-full bg-[var(--mint)]/40 px-3 py-1">
-            <Check className="inline h-4 w-4 mr-1" /> {foundCount}/{NUM_DIFFS}
+            <Check className="inline h-4 w-4 mr-1" /> {foundCount}/{totalDiffs}
           </span>
           <span className="text-sm font-bold rounded-full bg-muted px-3 py-1 text-foreground/70">
             Erros: {mistakes}
           </span>
           <button
+            onClick={useHint}
+            disabled={done || foundCount === totalDiffs}
+            className="rounded-full bg-card border-2 border-border px-3 py-2 text-sm font-bold hover:border-[var(--sunshine)] inline-flex items-center gap-1 disabled:opacity-40"
+            title="Mostra uma diferença (custa 1 erro)"
+          >
+            <Lightbulb className="h-4 w-4" /> Dica
+          </button>
+          <button
             onClick={reset}
-            className="rounded-full bg-card border-2 border-border px-4 py-2 text-sm font-bold hover:border-primary/40 inline-flex items-center gap-1"
+            className="rounded-full bg-card border-2 border-border px-3 py-2 text-sm font-bold hover:border-primary/40 inline-flex items-center gap-1"
           >
             <RotateCcw className="h-4 w-4" /> Nova cena
           </button>
@@ -118,74 +115,99 @@ export function SpotDifferencesGame() {
       </div>
 
       <p className="mt-3 text-sm text-foreground/70">
-        Compare as duas imagens. Toque nos <strong>7 elementos extras</strong> que
-        aparecem só na cena da direita!
+        Compare as duas imagens e toque, na imagem da <strong>direita</strong>,
+        nos <strong>{totalDiffs} elementos diferentes</strong>!
       </p>
 
       <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Left: Original */}
         <figure className="relative">
           <img
-            src={scene.image}
+            src={scene.original}
             alt={`${scene.name} (original)`}
-            className="w-full aspect-square object-cover rounded-2xl border-4 border-card shadow-soft"
+            className="w-full aspect-square object-cover rounded-2xl border-4 border-card shadow-soft select-none"
             loading="lazy"
+            draggable={false}
           />
           <figcaption className="absolute top-2 left-2 text-xs font-bold bg-card/90 rounded-full px-3 py-1">
             Original
           </figcaption>
         </figure>
 
-        {/* Right: With stickers */}
+        {/* Right: Modified — clickable */}
         <figure className="relative">
           <div
-            className={`relative w-full aspect-square rounded-2xl overflow-hidden border-4 transition-colors ${
-              flashWrong ? "border-destructive" : "border-card"
-            } shadow-soft`}
-            onClick={handleWrongClick}
+            ref={imgRef}
+            onClick={handleClick}
+            className="relative w-full aspect-square rounded-2xl overflow-hidden border-4 border-card shadow-soft cursor-crosshair"
           >
             <img
-              src={scene.image}
+              src={scene.modified}
               alt={`${scene.name} (com diferenças)`}
               className="absolute inset-0 w-full h-full object-cover select-none"
               loading="lazy"
               draggable={false}
             />
-            {stickers.map((s) => (
-              <button
-                key={s.id}
-                data-sticker
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (!s.found && !done) handleStickerClick(s.id);
-                }}
-                aria-label={s.found ? "Encontrado" : "Diferença"}
-                className="absolute grid place-items-center"
-                style={{
-                  left: `${s.x}%`,
-                  top: `${s.y}%`,
-                  transform: `translate(-50%, -50%) rotate(${s.rotate}deg)`,
-                  fontSize: `${s.size}rem`,
-                  lineHeight: 1,
-                  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4))",
-                  cursor: s.found ? "default" : "pointer",
-                }}
-              >
-                {s.found ? (
-                  <motion.span
-                    initial={{ scale: 1 }}
-                    animate={{ scale: [1, 1.4, 1] }}
-                    transition={{ duration: 0.4 }}
-                    className="grid place-items-center h-12 w-12 rounded-full bg-[var(--mint)]/80 text-white"
-                    style={{ fontSize: "1.5rem" }}
-                  >
-                    ✓
-                  </motion.span>
-                ) : (
-                  <span aria-hidden>{s.emoji}</span>
-                )}
-              </button>
-            ))}
+
+            {/* Found markers */}
+            {diffs.map((d, i) =>
+              found[i] ? (
+                <motion.div
+                  key={`f-${i}`}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="absolute pointer-events-none"
+                  style={{
+                    left: `${d.x}%`,
+                    top: `${d.y}%`,
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <div className="h-12 w-12 rounded-full border-4 border-[var(--mint)] bg-[var(--mint)]/20 grid place-items-center">
+                    <Check className="h-6 w-6 text-white drop-shadow" />
+                  </div>
+                </motion.div>
+              ) : null,
+            )}
+
+            {/* Hint pulse */}
+            <AnimatePresence>
+              {hintIdx !== null && (
+                <motion.div
+                  key={`hint-${hintIdx}`}
+                  initial={{ scale: 0.4, opacity: 0 }}
+                  animate={{ scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1.6, repeat: Infinity }}
+                  className="absolute pointer-events-none"
+                  style={{
+                    left: `${diffs[hintIdx].x}%`,
+                    top: `${diffs[hintIdx].y}%`,
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <div className="h-16 w-16 rounded-full border-4 border-[var(--sunshine)] bg-[var(--sunshine)]/20" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Wrong click flash */}
+            <AnimatePresence>
+              {flashWrong && (
+                <motion.div
+                  key={`${flashWrong.x}-${flashWrong.y}`}
+                  initial={{ scale: 0.4, opacity: 1 }}
+                  animate={{ scale: 1.6, opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute pointer-events-none h-10 w-10 rounded-full border-4 border-destructive"
+                  style={{
+                    left: `${flashWrong.x}%`,
+                    top: `${flashWrong.y}%`,
+                    transform: "translate(-50%, -50%)",
+                  }}
+                />
+              )}
+            </AnimatePresence>
           </div>
           <figcaption className="absolute top-2 left-2 text-xs font-bold bg-card/90 rounded-full px-3 py-1">
             Encontre as diferenças
