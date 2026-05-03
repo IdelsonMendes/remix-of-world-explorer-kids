@@ -49,7 +49,7 @@ type Stamp = {
   date: string;
 };
 
-type GameId = "memoria" | "bandeiras" | "safari" | "sons" | "monumentos";
+type GameId = "memoria" | "bandeiras" | "safari" | "sons" | "monumentos" | "seteerros";
 
 type PassportState = {
   explorerName: string;
@@ -102,6 +102,7 @@ const emptyMiniGames: Record<GameId, number> = {
   safari: 0,
   sons: 0,
   monumentos: 0,
+  seteerros: 0,
 };
 
 export function PassportProvider({ children }: { children: ReactNode }) {
