@@ -95,7 +95,7 @@ import gdaySnd from "@/assets/sounds/gday.mp3";
 import holaSnd from "@/assets/sounds/hola.mp3";
 import sawubonaSnd from "@/assets/sounds/sawubona.mp3";
 
-export type MiniGameId = "memoria" | "bandeiras" | "safari" | "sons" | "monumentos";
+export type MiniGameId = "memoria" | "bandeiras" | "safari" | "sons" | "monumentos" | "seteerros";
 
 export type MiniGameMeta = {
   id: MiniGameId;
