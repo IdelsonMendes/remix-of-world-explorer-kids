@@ -150,6 +150,14 @@ export const MINI_GAMES: MiniGameMeta[] = [
     description: "Identifique os monumentos icônicos espalhados pelo mundo.",
     color: "var(--grape)",
   },
+  {
+    id: "seteerros",
+    title: "Sete Erros",
+    emoji: "🔍",
+    tagline: "Encontre as 7 diferenças",
+    description: "Compare duas cenas de um país e encontre os 7 elementos diferentes.",
+    color: "var(--coral)",
+  },
 ];
 
 // Flag cards: ISO code drives the flag-icons CSS rendering
