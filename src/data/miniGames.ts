@@ -367,3 +367,33 @@ export const ALL_COUNTRY_NAMES = [
   "Grécia",
   "Portugal",
 ];
+
+// Cenas para o jogo "Sete Erros" — reutiliza imagens existentes.
+// O componente sobrepõe stickers (emojis) na imagem da direita em posições aleatórias.
+export const SCENE_IMAGES: { image: string; country: string; name: string }[] = [
+  { image: christRedeemer, country: "Brasil", name: "Cristo Redentor" },
+  { image: sugarloaf, country: "Brasil", name: "Pão de Açúcar" },
+  { image: lencois, country: "Brasil", name: "Lençóis Maranhenses" },
+  { image: liberty, country: "Estados Unidos", name: "Estátua da Liberdade" },
+  { image: rushmore, country: "Estados Unidos", name: "Monte Rushmore" },
+  { image: greatWall, country: "China", name: "Grande Muralha" },
+  { image: forbiddenCity, country: "China", name: "Cidade Proibida" },
+  { image: stBasil, country: "Rússia", name: "Catedral de São Basílio" },
+  { image: himeji, country: "Japão", name: "Castelo de Himeji" },
+  { image: mtFuji, country: "Japão", name: "Monte Fuji" },
+  { image: tableMountain, country: "África do Sul", name: "Table Mountain" },
+  { image: eiffel, country: "França", name: "Torre Eiffel" },
+  { image: montStMichel, country: "França", name: "Mont Saint-Michel" },
+  { image: colosseum, country: "Itália", name: "Coliseu" },
+  { image: pisa, country: "Itália", name: "Torre de Pisa" },
+  { image: operaHouse, country: "Austrália", name: "Casa de Ópera de Sydney" },
+  { image: uluru, country: "Austrália", name: "Uluru" },
+  { image: chichenItza, country: "México", name: "Chichén Itzá" },
+];
+
+// Stickers (emojis) usados como "diferenças" sobrepostas
+export const SCENE_STICKERS = [
+  "🦜", "🌸", "⭐", "🎈", "🦋", "🍩", "🌈", "🚀",
+  "🐠", "🍕", "🎵", "🌻", "🍦", "🐝", "🎩", "🪁",
+];
+
