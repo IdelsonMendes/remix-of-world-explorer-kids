@@ -14,7 +14,102 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      country_progress: {
+        Row: {
+          country: string
+          games_done: boolean
+          id: string
+          story_read: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          country: string
+          games_done?: boolean
+          id?: string
+          story_read?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          country?: string
+          games_done?: boolean
+          id?: string
+          story_read?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mini_game_scores: {
+        Row: {
+          game_id: string
+          id: string
+          score: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          game_id: string
+          id?: string
+          score?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          game_id?: string
+          id?: string
+          score?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar: string
+          created_at: string
+          explorer_name: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar?: string
+          created_at?: string
+          explorer_name?: string
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar?: string
+          created_at?: string
+          explorer_name?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      stamps: {
+        Row: {
+          country: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          country: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          country?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
