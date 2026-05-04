@@ -17,7 +17,7 @@ export function Passport() {
         <div className="relative order-2 lg:order-1">
           <div className="absolute -inset-6 rounded-[3rem] bg-gradient-candy opacity-20 blur-2xl" />
           <div className="relative rounded-[2.5rem] bg-card p-8 shadow-float border-4 border-card">
-            {!explorerName ? (
+            {!isLoggedIn ? (
               <div className="flex flex-col items-center text-center">
                 <img
                   src={passport}
@@ -31,30 +31,14 @@ export function Passport() {
                   Crie seu passaporte! 🛂
                 </h3>
                 <p className="mt-2 text-sm text-foreground/70">
-                  Escreva seu nome de explorador para começar a colecionar carimbos.
+                  Faça login para começar a colecionar carimbos e salvar seu progresso.
                 </p>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (draftName.trim()) setExplorerName(draftName.trim());
-                  }}
-                  className="mt-5 flex flex-col sm:flex-row gap-2 w-full max-w-sm"
+                <Link
+                  to="/login"
+                  className="mt-5 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
                 >
-                  <input
-                    type="text"
-                    placeholder="Ex: Capitão Pedro"
-                    value={draftName}
-                    onChange={(e) => setDraftName(e.target.value)}
-                    maxLength={24}
-                    className="flex-1 rounded-full border-2 border-border bg-background px-5 py-3 font-semibold focus:outline-none focus:border-primary"
-                  />
-                  <button
-                    type="submit"
-                    className="rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
-                  >
-                    Criar
-                  </button>
-                </form>
+                  Entrar / Criar conta
+                </Link>
               </div>
             ) : (
               <div>
