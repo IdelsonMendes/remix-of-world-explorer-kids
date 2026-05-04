@@ -1,4 +1,6 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { Session } from "@supabase/supabase-js";
 
 import astronaut from "@/assets/avatars/astronaut.png";
 import explorer from "@/assets/avatars/explorer.png";
@@ -49,16 +51,17 @@ type Stamp = {
   date: string;
 };
 
-type GameId = "memoria" | "bandeiras" | "safari" | "sons" | "monumentos" | "seteerros";
+export type GameId = "memoria" | "bandeiras" | "safari" | "sons" | "monumentos" | "seteerros";
 
 type PassportState = {
+  loading: boolean;
+  session: Session | null;
   explorerName: string;
   setExplorerName: (name: string) => void;
-  avatar: string; // image URL
+  avatar: string;
   setAvatar: (a: string) => void;
   isLoggedIn: boolean;
-  login: (name: string, avatar: string) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   stamps: Stamp[];
   addStamp: (country: CountrySlug) => void;
   hasStamp: (country: CountrySlug) => boolean;
@@ -68,7 +71,7 @@ type PassportState = {
   markGamesDone: (country: CountrySlug) => void;
   miniGameScores: Record<GameId, number>;
   setMiniGameScore: (id: GameId, score: number) => void;
-  resetPassport: () => void;
+  resetPassport: () => Promise<void>;
 };
 
 const PassportContext = createContext<PassportState | null>(null);
@@ -106,19 +109,120 @@ const emptyMiniGames: Record<GameId, number> = {
 };
 
 export function PassportProvider({ children }: { children: ReactNode }) {
-  const [explorerName, setExplorerName] = useState<string>("");
-  const [avatar, setAvatar] = useState<string>("");
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const [explorerName, setExplorerNameState] = useState<string>("");
+  const [avatar, setAvatarState] = useState<string>("");
   const [stamps, setStamps] = useState<Stamp[]>([]);
   const [storyRead, setStoryRead] = useState<Record<CountrySlug, boolean>>({ ...emptyProgress });
   const [gamesDone, setGamesDone] = useState<Record<CountrySlug, boolean>>({ ...emptyProgress });
   const [miniGameScores, setMiniGameScores] =
     useState<Record<GameId, number>>({ ...emptyMiniGames });
 
-  const isLoggedIn = explorerName.trim().length > 0 && avatar.length > 0;
+  const userIdRef = useRef<string | null>(null);
 
-  const login = (name: string, av: string) => {
-    setExplorerName(name.trim());
-    setAvatar(av);
+  // Auth bootstrap
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
+      setSession(s);
+      userIdRef.current = s?.user.id ?? null;
+      if (!s) {
+        setExplorerNameState("");
+        setAvatarState("");
+        setStamps([]);
+        setStoryRead({ ...emptyProgress });
+        setGamesDone({ ...emptyProgress });
+        setMiniGameScores({ ...emptyMiniGames });
+      }
+    });
+
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      userIdRef.current = data.session?.user.id ?? null;
+      setLoading(false);
+    });
+
+    return () => {
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+
+  // Load data when session changes
+  useEffect(() => {
+    const userId = session?.user.id;
+    if (!userId) return;
+
+    let cancelled = false;
+    (async () => {
+      const [profileRes, stampsRes, progressRes, scoresRes] = await Promise.all([
+        supabase.from("profiles").select("explorer_name, avatar").eq("id", userId).maybeSingle(),
+        supabase.from("stamps").select("country, earned_at").eq("user_id", userId),
+        supabase
+          .from("country_progress")
+          .select("country, story_read, games_done")
+          .eq("user_id", userId),
+        supabase.from("mini_game_scores").select("game_id, score").eq("user_id", userId),
+      ]);
+
+      if (cancelled) return;
+
+      if (profileRes.data) {
+        setExplorerNameState(profileRes.data.explorer_name ?? "");
+        setAvatarState(profileRes.data.avatar ?? "");
+      }
+      if (stampsRes.data) {
+        setStamps(
+          stampsRes.data.map((s) => ({
+            country: s.country as CountrySlug,
+            date: new Date(s.earned_at).toLocaleDateString("pt-BR"),
+          })),
+        );
+      }
+      if (progressRes.data) {
+        const sr = { ...emptyProgress };
+        const gd = { ...emptyProgress };
+        for (const row of progressRes.data) {
+          const c = row.country as CountrySlug;
+          if (c in sr) {
+            sr[c] = !!row.story_read;
+            gd[c] = !!row.games_done;
+          }
+        }
+        setStoryRead(sr);
+        setGamesDone(gd);
+      }
+      if (scoresRes.data) {
+        const next = { ...emptyMiniGames };
+        for (const row of scoresRes.data) {
+          const g = row.game_id as GameId;
+          if (g in next) next[g] = row.score ?? 0;
+        }
+        setMiniGameScores(next);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.user.id]);
+
+  const isLoggedIn = !!session && explorerName.trim().length > 0;
+
+  const setExplorerName = (name: string) => {
+    setExplorerNameState(name);
+    const userId = userIdRef.current;
+    if (userId) {
+      void supabase.from("profiles").upsert({ id: userId, explorer_name: name });
+    }
+  };
+
+  const setAvatar = (a: string) => {
+    setAvatarState(a);
+    const userId = userIdRef.current;
+    if (userId) {
+      void supabase.from("profiles").upsert({ id: userId, avatar: a });
+    }
   };
 
   const addStamp = (country: CountrySlug) => {
@@ -127,38 +231,89 @@ export function PassportProvider({ children }: { children: ReactNode }) {
         ? prev
         : [...prev, { country, date: new Date().toLocaleDateString("pt-BR") }],
     );
+    const userId = userIdRef.current;
+    if (userId) {
+      void supabase
+        .from("stamps")
+        .upsert({ user_id: userId, country }, { onConflict: "user_id,country" });
+    }
   };
 
   const hasStamp = (country: CountrySlug) => stamps.some((s) => s.country === country);
 
-  const markStoryRead = (country: CountrySlug) =>
+  const upsertProgress = (country: CountrySlug, patch: { story_read?: boolean; games_done?: boolean }) => {
+    const userId = userIdRef.current;
+    if (!userId) return;
+    void supabase
+      .from("country_progress")
+      .upsert(
+        {
+          user_id: userId,
+          country,
+          story_read: patch.story_read ?? storyRead[country] ?? false,
+          games_done: patch.games_done ?? gamesDone[country] ?? false,
+        },
+        { onConflict: "user_id,country" },
+      );
+  };
+
+  const markStoryRead = (country: CountrySlug) => {
     setStoryRead((prev) => ({ ...prev, [country]: true }));
-  const markGamesDone = (country: CountrySlug) =>
+    upsertProgress(country, { story_read: true });
+  };
+
+  const markGamesDone = (country: CountrySlug) => {
     setGamesDone((prev) => ({ ...prev, [country]: true }));
+    upsertProgress(country, { games_done: true });
+  };
 
-  const setMiniGameScore = (id: GameId, score: number) =>
-    setMiniGameScores((prev) => ({ ...prev, [id]: Math.max(prev[id], score) }));
+  const setMiniGameScore = (id: GameId, score: number) => {
+    setMiniGameScores((prev) => {
+      const best = Math.max(prev[id], score);
+      if (best !== prev[id]) {
+        const userId = userIdRef.current;
+        if (userId) {
+          void supabase
+            .from("mini_game_scores")
+            .upsert({ user_id: userId, game_id: id, score: best }, { onConflict: "user_id,game_id" });
+        }
+      }
+      return { ...prev, [id]: best };
+    });
+  };
 
-  const resetPassport = () => {
+  const resetPassport = async () => {
+    const userId = userIdRef.current;
     setStamps([]);
     setStoryRead({ ...emptyProgress });
     setGamesDone({ ...emptyProgress });
     setMiniGameScores({ ...emptyMiniGames });
-    setExplorerName("");
-    setAvatar("");
+    if (userId) {
+      await Promise.all([
+        supabase.from("stamps").delete().eq("user_id", userId),
+        supabase.from("country_progress").delete().eq("user_id", userId),
+        supabase
+          .from("mini_game_scores")
+          .update({ score: 0 })
+          .eq("user_id", userId),
+      ]);
+    }
   };
 
-  const logout = () => resetPassport();
+  const logout = async () => {
+    await supabase.auth.signOut();
+  };
 
   return (
     <PassportContext.Provider
       value={{
+        loading,
+        session,
         explorerName,
         setExplorerName,
         avatar,
         setAvatar,
         isLoggedIn,
-        login,
         logout,
         stamps,
         addStamp,
