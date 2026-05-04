@@ -1,13 +1,12 @@
-import { useState } from "react";
 import { Award, Stamp as StampIcon, Sparkles, RotateCcw } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import passport from "@/assets/passport.png";
 import { usePassport } from "@/context/PassportContext";
 import { COUNTRIES, COUNTRY_LIST } from "@/data/countries";
 import { COUNTRY_ISO } from "@/data/miniGames";
 
 export function Passport() {
-  const { explorerName, setExplorerName, stamps, resetPassport } = usePassport();
-  const [draftName, setDraftName] = useState("");
+  const { explorerName, isLoggedIn, stamps, resetPassport } = usePassport();
 
   const totalCountries = COUNTRY_LIST.length;
   const collected = stamps.length;
