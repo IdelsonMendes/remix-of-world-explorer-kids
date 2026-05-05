@@ -261,6 +261,17 @@ export function PassportProvider({ children }: { children: ReactNode }) {
       });
   };
 
+  const setProfile = async (name: string, a: string) => {
+    setExplorerNameState(name);
+    setAvatarState(a);
+    const userId = userIdRef.current;
+    if (!userId) return;
+    const { error } = await supabase
+      .from("profiles")
+      .upsert({ id: userId, explorer_name: name, avatar: a });
+    if (error) console.error("[passport] setProfile failed", error);
+  };
+
   const addStamp = (country: CountrySlug) => {
     setStamps((prev) =>
       prev.find((s) => s.country === country)
