@@ -1,9 +1,10 @@
 import { Globe, LogIn, LayoutDashboard } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { usePassport } from "@/context/PassportContext";
+import { getAvatarSrc, usePassport } from "@/context/PassportContext";
 
 export function SiteHeader() {
   const { isLoggedIn, avatar, explorerName } = usePassport();
+  const avatarSrc = getAvatarSrc(avatar);
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-background/70 border-b border-border/60">
