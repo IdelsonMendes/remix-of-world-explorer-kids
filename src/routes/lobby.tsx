@@ -29,6 +29,7 @@ function LobbyPage() {
     gamesDone,
     miniGameScores,
   } = usePassport();
+  const avatarSrc = getAvatarSrc(avatar);
 
   if (!isLoggedIn) {
     if (typeof window !== "undefined") {
