@@ -85,7 +85,7 @@ function LobbyPage() {
               transition={{ repeat: Infinity, duration: 4 }}
               className="h-24 w-24 sm:h-28 sm:w-28 rounded-3xl bg-gradient-sunset grid place-items-center overflow-hidden shadow-float"
             >
-              <img src={avatar} alt={explorerName} className="h-full w-full object-contain p-2" />
+              <img src={avatarSrc} alt={explorerName} className="h-full w-full object-contain p-2" />
             </motion.div>
             <div>
               <span className="inline-flex items-center gap-1 rounded-full bg-accent/60 px-3 py-1 text-xs font-bold uppercase tracking-wider">
