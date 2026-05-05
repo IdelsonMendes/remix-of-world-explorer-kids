@@ -56,7 +56,7 @@ function LobbyPage() {
           </Link>
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2 rounded-full bg-card border-2 border-border pl-1 pr-3 py-1">
-              <img src={avatar} alt={explorerName} className="h-8 w-8 rounded-full object-contain bg-muted/40" />
+              <img src={avatarSrc} alt={explorerName} className="h-8 w-8 rounded-full object-contain bg-muted/40" />
               <span className="font-bold text-sm">{explorerName}</span>
             </div>
             <button
