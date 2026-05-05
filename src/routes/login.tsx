@@ -110,9 +110,8 @@ function LoginPage() {
       <ProfileCompletion
         defaultName={explorerName || (session.user.user_metadata?.full_name as string) || ""}
         defaultAvatar={avatar || DEFAULT_AVATAR_ID}
-        onSubmit={(n, a) => {
-          setExplorerName(n);
-          setAvatar(a);
+        onSubmit={async (n, a) => {
+          await setProfile(n, a);
           navigate({ to: "/lobby" });
         }}
       />
