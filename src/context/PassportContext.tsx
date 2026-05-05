@@ -371,6 +371,7 @@ export function PassportProvider({ children }: { children: ReactNode }) {
         setExplorerName,
         avatar,
         setAvatar,
+        setProfile,
         isLoggedIn,
         logout,
         stamps,
