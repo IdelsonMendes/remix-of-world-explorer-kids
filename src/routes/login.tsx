@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Rocket, LogIn } from "lucide-react";
-import { AVATAR_OPTIONS, usePassport } from "@/context/PassportContext";
+import { AVATAR_OPTIONS, DEFAULT_AVATAR_ID, getAvatarSrc, usePassport } from "@/context/PassportContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import luna from "@/assets/luna-mascot.png";
