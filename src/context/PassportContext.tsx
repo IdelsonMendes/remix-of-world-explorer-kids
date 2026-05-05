@@ -241,11 +241,13 @@ export function PassportProvider({ children }: { children: ReactNode }) {
         : [...prev, { country, date: new Date().toLocaleDateString("pt-BR") }],
     );
     const userId = userIdRef.current;
-    if (userId) {
-      void supabase
-        .from("stamps")
-        .upsert({ user_id: userId, country }, { onConflict: "user_id,country" });
-    }
+    if (!userId) return;
+    void supabase
+      .from("stamps")
+      .upsert({ user_id: userId, country }, { onConflict: "user_id,country" })
+      .then(({ error }) => {
+        if (error) console.error("[passport] addStamp failed", error);
+      });
   };
 
   const hasStamp = (country: CountrySlug) => stamps.some((s) => s.country === country);
@@ -263,7 +265,10 @@ export function PassportProvider({ children }: { children: ReactNode }) {
           games_done: patch.games_done ?? gamesDone[country] ?? false,
         },
         { onConflict: "user_id,country" },
-      );
+      )
+      .then(({ error }) => {
+        if (error) console.error("[passport] upsertProgress failed", error);
+      });
   };
 
   const markStoryRead = (country: CountrySlug) => {
@@ -284,7 +289,13 @@ export function PassportProvider({ children }: { children: ReactNode }) {
         if (userId) {
           void supabase
             .from("mini_game_scores")
-            .upsert({ user_id: userId, game_id: id, score: best }, { onConflict: "user_id,game_id" });
+            .upsert(
+              { user_id: userId, game_id: id, score: best },
+              { onConflict: "user_id,game_id" },
+            )
+            .then(({ error }) => {
+              if (error) console.error("[passport] setMiniGameScore failed", error);
+            });
         }
       }
       return { ...prev, [id]: best };
