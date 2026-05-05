@@ -110,7 +110,7 @@ function LoginPage() {
     return (
       <ProfileCompletion
         defaultName={explorerName || (session.user.user_metadata?.full_name as string) || ""}
-        defaultAvatar={avatar || AVATAR_OPTIONS[0].src}
+        defaultAvatar={avatar || DEFAULT_AVATAR_ID}
         onSubmit={(n, a) => {
           setExplorerName(n);
           setAvatar(a);
