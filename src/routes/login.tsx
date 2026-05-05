@@ -68,8 +68,7 @@ function LoginPage() {
         });
         if (err) throw err;
         if (data.session) {
-          setExplorerName(name.trim());
-          setAvatar(chosenAvatar);
+          await setProfile(name.trim(), chosenAvatar);
           navigate({ to: "/lobby" });
         } else {
           setInfo("Conta criada! Confirme seu email para entrar.");
