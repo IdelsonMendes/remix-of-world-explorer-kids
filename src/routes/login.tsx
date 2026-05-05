@@ -316,9 +316,9 @@ function ProfileCompletion({
               <button
                 key={opt.id}
                 type="button"
-                onClick={() => setAvatar(opt.src)}
+                onClick={() => setAvatar(opt.id)}
                 className={`aspect-square rounded-2xl overflow-hidden border-2 transition flex items-center justify-center bg-card ${
-                  avatar === opt.src
+                  avatar === opt.id
                     ? "border-primary scale-105 shadow-sticker ring-2 ring-primary/30"
                     : "border-border hover:border-primary/40"
                 }`}
