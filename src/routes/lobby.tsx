@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { LogOut, Map, Sparkles, Stamp as StampIcon, Award } from "lucide-react";
-import { usePassport } from "@/context/PassportContext";
+import { getAvatarSrc, usePassport } from "@/context/PassportContext";
 import { COUNTRY_LIST, COUNTRIES } from "@/data/countries";
 import { MINI_GAMES, COUNTRY_ISO } from "@/data/miniGames";
 import { LobbyMap } from "@/components/LobbyMap";
