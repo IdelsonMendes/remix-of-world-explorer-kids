@@ -86,6 +86,7 @@ type PassportState = {
   setExplorerName: (name: string) => void;
   avatar: string;
   setAvatar: (a: string) => void;
+  setProfile: (name: string, avatar: string) => Promise<void>;
   isLoggedIn: boolean;
   logout: () => Promise<void>;
   stamps: Stamp[];
