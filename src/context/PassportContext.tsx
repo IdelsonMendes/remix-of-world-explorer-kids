@@ -10,6 +10,32 @@ import adventurer from "@/assets/avatars/adventurer.png";
 import samurai from "@/assets/avatars/samurai.png";
 import wizard from "@/assets/avatars/wizard.png";
 import superhero from "@/assets/avatars/superhero.png";
+import defaultAvatar from "@/assets/avatars/default.png";
+
+export const DEFAULT_AVATAR_ID = "default";
+
+const AVATAR_SRC_BY_ID: Record<string, string> = {
+  default: defaultAvatar,
+  astronaut,
+  explorer,
+  pirate,
+  scientist,
+  adventurer,
+  samurai,
+  wizard,
+  superhero,
+};
+
+/** Resolve a stored avatar id (or legacy src URL) to a usable image src. */
+export function getAvatarSrc(value: string | null | undefined): string {
+  if (!value) return defaultAvatar;
+  if (AVATAR_SRC_BY_ID[value]) return AVATAR_SRC_BY_ID[value];
+  // Legacy: an actual URL (e.g. old builds saved bundled asset paths). Use as-is.
+  if (value.startsWith("http") || value.startsWith("/") || value.startsWith("data:")) {
+    return value;
+  }
+  return defaultAvatar;
+}
 
 export type CountrySlug =
   | "brasil"
@@ -60,6 +86,7 @@ type PassportState = {
   setExplorerName: (name: string) => void;
   avatar: string;
   setAvatar: (a: string) => void;
+  setProfile: (name: string, avatar: string) => Promise<void>;
   isLoggedIn: boolean;
   logout: () => Promise<void>;
   stamps: Stamp[];
@@ -234,6 +261,17 @@ export function PassportProvider({ children }: { children: ReactNode }) {
       });
   };
 
+  const setProfile = async (name: string, a: string) => {
+    setExplorerNameState(name);
+    setAvatarState(a);
+    const userId = userIdRef.current;
+    if (!userId) return;
+    const { error } = await supabase
+      .from("profiles")
+      .upsert({ id: userId, explorer_name: name, avatar: a });
+    if (error) console.error("[passport] setProfile failed", error);
+  };
+
   const addStamp = (country: CountrySlug) => {
     setStamps((prev) =>
       prev.find((s) => s.country === country)
@@ -333,6 +371,7 @@ export function PassportProvider({ children }: { children: ReactNode }) {
         setExplorerName,
         avatar,
         setAvatar,
+        setProfile,
         isLoggedIn,
         logout,
         stamps,

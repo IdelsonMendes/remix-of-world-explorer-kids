@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { LogOut, Map, Sparkles, Stamp as StampIcon, Award } from "lucide-react";
-import { usePassport } from "@/context/PassportContext";
+import { getAvatarSrc, usePassport } from "@/context/PassportContext";
 import { COUNTRY_LIST, COUNTRIES } from "@/data/countries";
 import { MINI_GAMES, COUNTRY_ISO } from "@/data/miniGames";
 import { LobbyMap } from "@/components/LobbyMap";
@@ -29,6 +29,7 @@ function LobbyPage() {
     gamesDone,
     miniGameScores,
   } = usePassport();
+  const avatarSrc = getAvatarSrc(avatar);
 
   if (!isLoggedIn) {
     if (typeof window !== "undefined") {
@@ -55,7 +56,7 @@ function LobbyPage() {
           </Link>
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2 rounded-full bg-card border-2 border-border pl-1 pr-3 py-1">
-              <img src={avatar} alt={explorerName} className="h-8 w-8 rounded-full object-contain bg-muted/40" />
+              <img src={avatarSrc} alt={explorerName} className="h-8 w-8 rounded-full object-contain bg-muted/40" />
               <span className="font-bold text-sm">{explorerName}</span>
             </div>
             <button
@@ -84,7 +85,7 @@ function LobbyPage() {
               transition={{ repeat: Infinity, duration: 4 }}
               className="h-24 w-24 sm:h-28 sm:w-28 rounded-3xl bg-gradient-sunset grid place-items-center overflow-hidden shadow-float"
             >
-              <img src={avatar} alt={explorerName} className="h-full w-full object-contain p-2" />
+              <img src={avatarSrc} alt={explorerName} className="h-full w-full object-contain p-2" />
             </motion.div>
             <div>
               <span className="inline-flex items-center gap-1 rounded-full bg-accent/60 px-3 py-1 text-xs font-bold uppercase tracking-wider">

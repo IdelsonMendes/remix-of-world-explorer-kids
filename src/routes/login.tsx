@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Rocket, LogIn } from "lucide-react";
-import { AVATAR_OPTIONS, usePassport } from "@/context/PassportContext";
+import { AVATAR_OPTIONS, DEFAULT_AVATAR_ID, usePassport } from "@/context/PassportContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import luna from "@/assets/luna-mascot.png";
@@ -21,13 +21,13 @@ type Mode = "signin" | "signup";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { isLoggedIn, session, setExplorerName, setAvatar, explorerName, avatar } = usePassport();
+  const { isLoggedIn, session, setProfile, explorerName, avatar } = usePassport();
 
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [chosenAvatar, setChosenAvatar] = useState<string>(AVATAR_OPTIONS[0].src);
+  const [chosenAvatar, setChosenAvatar] = useState<string>(AVATAR_OPTIONS[0].id);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
   const [busy, setBusy] = useState(false);
@@ -68,8 +68,7 @@ function LoginPage() {
         });
         if (err) throw err;
         if (data.session) {
-          setExplorerName(name.trim());
-          setAvatar(chosenAvatar);
+          await setProfile(name.trim(), chosenAvatar);
           navigate({ to: "/lobby" });
         } else {
           setInfo("Conta criada! Confirme seu email para entrar.");
@@ -110,10 +109,9 @@ function LoginPage() {
     return (
       <ProfileCompletion
         defaultName={explorerName || (session.user.user_metadata?.full_name as string) || ""}
-        defaultAvatar={avatar || AVATAR_OPTIONS[0].src}
-        onSubmit={(n, a) => {
-          setExplorerName(n);
-          setAvatar(a);
+        defaultAvatar={avatar || DEFAULT_AVATAR_ID}
+        onSubmit={async (n, a) => {
+          await setProfile(n, a);
           navigate({ to: "/lobby" });
         }}
       />
@@ -202,9 +200,9 @@ function LoginPage() {
                       <button
                         key={opt.id}
                         type="button"
-                        onClick={() => setChosenAvatar(opt.src)}
+                        onClick={() => setChosenAvatar(opt.id)}
                         className={`group aspect-square rounded-2xl overflow-hidden border-2 transition flex items-center justify-center bg-card ${
-                          chosenAvatar === opt.src
+                          chosenAvatar === opt.id
                             ? "border-primary scale-105 shadow-sticker ring-2 ring-primary/30"
                             : "border-border hover:border-primary/40"
                         }`}
@@ -316,9 +314,9 @@ function ProfileCompletion({
               <button
                 key={opt.id}
                 type="button"
-                onClick={() => setAvatar(opt.src)}
+                onClick={() => setAvatar(opt.id)}
                 className={`aspect-square rounded-2xl overflow-hidden border-2 transition flex items-center justify-center bg-card ${
-                  avatar === opt.src
+                  avatar === opt.id
                     ? "border-primary scale-105 shadow-sticker ring-2 ring-primary/30"
                     : "border-border hover:border-primary/40"
                 }`}
