@@ -28,7 +28,7 @@ export function SiteHeader() {
             to="/lobby"
             className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-4 py-2 text-sm font-bold shadow-sticker hover:-translate-y-0.5 transition"
           >
-            <img src={avatar} alt={explorerName} className="h-6 w-6 rounded-full object-contain bg-white/20" />
+            <img src={avatarSrc} alt={explorerName} className="h-6 w-6 rounded-full object-contain bg-white/20" />
             <span className="hidden sm:inline">Lobby de {explorerName}</span>
             <LayoutDashboard className="h-4 w-4 sm:hidden" />
           </Link>
