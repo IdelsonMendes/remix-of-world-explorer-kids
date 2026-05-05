@@ -27,7 +27,7 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [chosenAvatar, setChosenAvatar] = useState<string>(AVATAR_OPTIONS[0].src);
+  const [chosenAvatar, setChosenAvatar] = useState<string>(AVATAR_OPTIONS[0].id);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
   const [busy, setBusy] = useState(false);
