@@ -212,17 +212,26 @@ export function PassportProvider({ children }: { children: ReactNode }) {
   const setExplorerName = (name: string) => {
     setExplorerNameState(name);
     const userId = userIdRef.current;
-    if (userId) {
-      void supabase.from("profiles").upsert({ id: userId, explorer_name: name });
-    }
+    if (!userId) return;
+    // Send both fields so an upsert never wipes the other column to its default.
+    void supabase
+      .from("profiles")
+      .upsert({ id: userId, explorer_name: name, avatar })
+      .then(({ error }) => {
+        if (error) console.error("[passport] setExplorerName failed", error);
+      });
   };
 
   const setAvatar = (a: string) => {
     setAvatarState(a);
     const userId = userIdRef.current;
-    if (userId) {
-      void supabase.from("profiles").upsert({ id: userId, avatar: a });
-    }
+    if (!userId) return;
+    void supabase
+      .from("profiles")
+      .upsert({ id: userId, explorer_name: explorerName, avatar: a })
+      .then(({ error }) => {
+        if (error) console.error("[passport] setAvatar failed", error);
+      });
   };
 
   const addStamp = (country: CountrySlug) => {
