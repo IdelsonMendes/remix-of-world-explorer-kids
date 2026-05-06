@@ -380,6 +380,8 @@ export type SpotDiffScene = {
   name: string;
   original: string;
   modified: string;
+  // Aspect ratio (width / height) — usado para evitar esticar a imagem.
+  aspect: number;
   // Zonas de diferença em coordenadas relativas (0-100). hint = dica curta.
   diffs: { x: number; y: number; hint: string }[];
 };
