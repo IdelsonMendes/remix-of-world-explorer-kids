@@ -380,6 +380,8 @@ export type SpotDiffScene = {
   name: string;
   original: string;
   modified: string;
+  // Aspect ratio (width / height) — usado para evitar esticar a imagem.
+  aspect: number;
   // Zonas de diferença em coordenadas relativas (0-100). hint = dica curta.
   diffs: { x: number; y: number; hint: string }[];
 };
@@ -391,6 +393,7 @@ export const SPOT_DIFF_SCENES: SpotDiffScene[] = [
     name: "Cristo Redentor",
     original: christRedeemer,
     modified: christRedeemerDiff,
+    aspect: 1408 / 768,
     diffs: [
       { x: 15, y: 15, hint: "Balão no céu" },
       { x: 88, y: 15, hint: "Pássaros voando" },
@@ -407,6 +410,7 @@ export const SPOT_DIFF_SCENES: SpotDiffScene[] = [
     name: "Torre Eiffel",
     original: eiffel,
     modified: eiffelDiff,
+    aspect: 1024 / 768,
     diffs: [
       { x: 12, y: 15, hint: "Nuvem nova" },
       { x: 85, y: 15, hint: "Balão amarelo" },
@@ -423,6 +427,7 @@ export const SPOT_DIFF_SCENES: SpotDiffScene[] = [
     name: "Coliseu",
     original: colosseum,
     modified: colosseumDiff,
+    aspect: 1024 / 768,
     diffs: [
       { x: 18, y: 18, hint: "Pássaros no céu" },
       { x: 50, y: 10, hint: "Avião" },

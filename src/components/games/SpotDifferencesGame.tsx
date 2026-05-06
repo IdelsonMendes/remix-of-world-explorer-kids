@@ -125,7 +125,8 @@ export function SpotDifferencesGame() {
           <img
             src={scene.original}
             alt={`${scene.name} (original)`}
-            className="w-full aspect-square object-cover rounded-2xl border-4 border-card shadow-soft select-none"
+            style={{ aspectRatio: scene.aspect }}
+            className="w-full object-cover rounded-2xl border-4 border-card shadow-soft select-none"
             loading="lazy"
             draggable={false}
           />
@@ -139,7 +140,8 @@ export function SpotDifferencesGame() {
           <div
             ref={imgRef}
             onClick={handleClick}
-            className="relative w-full aspect-square rounded-2xl overflow-hidden border-4 border-card shadow-soft cursor-crosshair"
+            style={{ aspectRatio: scene.aspect }}
+            className="relative w-full rounded-2xl overflow-hidden border-4 border-card shadow-soft cursor-crosshair"
           >
             <img
               src={scene.modified}
