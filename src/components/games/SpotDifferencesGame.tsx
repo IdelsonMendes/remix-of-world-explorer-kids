@@ -140,7 +140,8 @@ export function SpotDifferencesGame() {
           <div
             ref={imgRef}
             onClick={handleClick}
-            className="relative w-full aspect-square rounded-2xl overflow-hidden border-4 border-card shadow-soft cursor-crosshair"
+            style={{ aspectRatio: scene.aspect }}
+            className="relative w-full rounded-2xl overflow-hidden border-4 border-card shadow-soft cursor-crosshair"
           >
             <img
               src={scene.modified}
