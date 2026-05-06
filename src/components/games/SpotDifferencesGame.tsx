@@ -125,7 +125,8 @@ export function SpotDifferencesGame() {
           <img
             src={scene.original}
             alt={`${scene.name} (original)`}
-            className="w-full aspect-square object-cover rounded-2xl border-4 border-card shadow-soft select-none"
+            style={{ aspectRatio: scene.aspect }}
+            className="w-full object-cover rounded-2xl border-4 border-card shadow-soft select-none"
             loading="lazy"
             draggable={false}
           />
