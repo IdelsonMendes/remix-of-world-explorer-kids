@@ -370,8 +370,11 @@ export const ALL_COUNTRY_NAMES = [
 
 // Cenas do "Sete Erros": cada cena tem a imagem original, uma versão editada
 // (com as diferenças) e uma lista de zonas (x,y em %) onde estão as alterações.
+import christRedeemerCartoon from "@/assets/monuments/christ-redeemer-cartoon.jpg";
 import christRedeemerDiff from "@/assets/monuments/christ-redeemer-diff.jpg";
+import eiffelCartoon from "@/assets/monuments/eiffel-cartoon.jpg";
 import eiffelDiff from "@/assets/monuments/eiffel-diff.jpg";
+import colosseumCartoon from "@/assets/monuments/colosseum-cartoon.jpg";
 import colosseumDiff from "@/assets/monuments/colosseum-diff.jpg";
 
 export type SpotDiffScene = {
