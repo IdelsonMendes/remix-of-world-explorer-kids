@@ -394,7 +394,7 @@ export const SPOT_DIFF_SCENES: SpotDiffScene[] = [
     id: "cristo",
     country: "Brasil",
     name: "Cristo Redentor",
-    original: christRedeemer,
+    original: christRedeemerCartoon,
     modified: christRedeemerDiff,
     aspect: 1408 / 768,
     diffs: [
@@ -411,7 +411,7 @@ export const SPOT_DIFF_SCENES: SpotDiffScene[] = [
     id: "eiffel",
     country: "França",
     name: "Torre Eiffel",
-    original: eiffel,
+    original: eiffelCartoon,
     modified: eiffelDiff,
     aspect: 1024 / 768,
     diffs: [
@@ -428,7 +428,7 @@ export const SPOT_DIFF_SCENES: SpotDiffScene[] = [
     id: "coliseu",
     country: "Itália",
     name: "Coliseu",
-    original: colosseum,
+    original: colosseumCartoon,
     modified: colosseumDiff,
     aspect: 1024 / 768,
     diffs: [
