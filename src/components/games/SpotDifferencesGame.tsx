@@ -4,7 +4,7 @@ import { RotateCcw, Trophy, Check, Lightbulb } from "lucide-react";
 import { SPOT_DIFF_SCENES, type SpotDiffScene } from "@/data/miniGames";
 import { usePassport } from "@/context/PassportContext";
 
-const HIT_RADIUS = 9; // % distance tolerance for a click to count
+const HIT_RADIUS = 12; // % distance tolerance for a click to count
 const NUM_DIFFS = 7;
 
 function pickScene(prevId?: string): SpotDiffScene {
@@ -52,11 +52,15 @@ export function SpotDifferencesGame() {
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
 
+    // Compute distance in pixel space so wide images don't bias the X axis
+    const aspect = rect.width / rect.height;
     let hitIdx = -1;
     let bestDist = Infinity;
     diffs.forEach((d, i) => {
       if (found[i]) return;
-      const dist = Math.hypot(d.x - x, d.y - y);
+      const dx = (d.x - x) * aspect;
+      const dy = d.y - y;
+      const dist = Math.hypot(dx, dy);
       if (dist <= HIT_RADIUS && dist < bestDist) {
         bestDist = dist;
         hitIdx = i;
@@ -78,7 +82,7 @@ export function SpotDifferencesGame() {
     const pick = remaining[Math.floor(Math.random() * remaining.length)];
     setHintIdx(pick);
     setMistakes((m) => m + 1); // dica custa um "erro"
-    setTimeout(() => setHintIdx(null), 1800);
+    setTimeout(() => setHintIdx(null), 2400);
   };
 
   return (
@@ -154,42 +158,41 @@ export function SpotDifferencesGame() {
             {/* Found markers */}
             {diffs.map((d, i) =>
               found[i] ? (
-                <motion.div
+                <div
                   key={`f-${i}`}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="absolute pointer-events-none"
-                  style={{
-                    left: `${d.x}%`,
-                    top: `${d.y}%`,
-                    transform: "translate(-50%, -50%)",
-                  }}
+                  className="absolute pointer-events-none -translate-x-1/2 -translate-y-1/2"
+                  style={{ left: `${d.x}%`, top: `${d.y}%` }}
                 >
-                  <div className="h-12 w-12 rounded-full border-4 border-[var(--mint)] bg-[var(--mint)]/20 grid place-items-center">
-                    <Check className="h-6 w-6 text-white drop-shadow" />
-                  </div>
-                </motion.div>
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="h-10 w-10 rounded-full border-4 border-[var(--mint)] bg-[var(--mint)]/20 grid place-items-center"
+                  >
+                    <Check className="h-5 w-5 text-white drop-shadow" />
+                  </motion.div>
+                </div>
               ) : null,
             )}
 
             {/* Hint pulse */}
             <AnimatePresence>
               {hintIdx !== null && (
-                <motion.div
+                <div
                   key={`hint-${hintIdx}`}
-                  initial={{ scale: 0.4, opacity: 0 }}
-                  animate={{ scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1.6, repeat: Infinity }}
-                  className="absolute pointer-events-none"
+                  className="absolute pointer-events-none -translate-x-1/2 -translate-y-1/2"
                   style={{
                     left: `${diffs[hintIdx].x}%`,
                     top: `${diffs[hintIdx].y}%`,
-                    transform: "translate(-50%, -50%)",
                   }}
                 >
-                  <div className="h-16 w-16 rounded-full border-4 border-[var(--sunshine)] bg-[var(--sunshine)]/20" />
-                </motion.div>
+                  <motion.div
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: [1, 1.15, 1], opacity: [0.9, 0.5, 0.9] }}
+                    exit={{ opacity: 0, scale: 0.6 }}
+                    transition={{ duration: 1.2, repeat: 2, ease: "easeInOut" }}
+                    className="h-11 w-11 rounded-full border-4 border-[var(--sunshine)] bg-[var(--sunshine)]/25"
+                  />
+                </div>
               )}
             </AnimatePresence>
 
