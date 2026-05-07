@@ -217,9 +217,6 @@ export function SpotDifferencesGame() {
               )}
             </AnimatePresence>
           </div>
-          <figcaption className="absolute top-2 left-2 text-xs font-bold bg-card/90 rounded-full px-3 py-1">
-            Encontre as diferenças
-          </figcaption>
         </figure>
       </div>
 
