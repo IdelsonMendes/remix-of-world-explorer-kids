@@ -125,7 +125,10 @@ export function SpotDifferencesGame() {
 
       <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Left: Original */}
-        <figure className="relative">
+        <figure className="m-0">
+          <figcaption className="text-xs font-bold text-foreground/70 mb-1.5 px-1">
+            Original
+          </figcaption>
           <img
             src={scene.original}
             alt={`${scene.name} (original)`}
@@ -134,13 +137,13 @@ export function SpotDifferencesGame() {
             loading="lazy"
             draggable={false}
           />
-          <figcaption className="absolute top-2 left-2 text-xs font-bold bg-card/90 rounded-full px-3 py-1">
-            Original
-          </figcaption>
         </figure>
 
         {/* Right: Modified — clickable */}
-        <figure className="relative">
+        <figure className="m-0">
+          <figcaption className="text-xs font-bold text-foreground/70 mb-1.5 px-1">
+            Encontre as diferenças
+          </figcaption>
           <div
             ref={imgRef}
             onClick={handleClick}
@@ -155,13 +158,13 @@ export function SpotDifferencesGame() {
               draggable={false}
             />
 
-            {/* Found markers */}
-            {diffs.map((d, i) =>
-              found[i] ? (
+            {/* Found markers — placed at the exact click coordinates */}
+            {found.map((pos, i) =>
+              pos ? (
                 <div
                   key={`f-${i}`}
                   className="absolute pointer-events-none -translate-x-1/2 -translate-y-1/2"
-                  style={{ left: `${d.x}%`, top: `${d.y}%` }}
+                  style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
                 >
                   <motion.div
                     initial={{ scale: 0, opacity: 0 }}
