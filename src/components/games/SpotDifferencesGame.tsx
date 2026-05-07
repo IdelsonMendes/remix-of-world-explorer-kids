@@ -82,7 +82,7 @@ export function SpotDifferencesGame() {
     const pick = remaining[Math.floor(Math.random() * remaining.length)];
     setHintIdx(pick);
     setMistakes((m) => m + 1); // dica custa um "erro"
-    setTimeout(() => setHintIdx(null), 1800);
+    setTimeout(() => setHintIdx(null), 2400);
   };
 
   return (
