@@ -16,8 +16,8 @@ function pickScene(prevId?: string): SpotDiffScene {
 export function SpotDifferencesGame() {
   const { setMiniGameScore } = usePassport();
   const [scene, setScene] = useState<SpotDiffScene>(() => pickScene());
-  const [found, setFound] = useState<boolean[]>(() =>
-    new Array(scene.diffs.length).fill(false),
+  const [found, setFound] = useState<{ x: number; y: number }[]>(() =>
+    new Array(scene.diffs.length).fill(null),
   );
   const [mistakes, setMistakes] = useState(0);
   const [done, setDone] = useState(false);
