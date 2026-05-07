@@ -4,7 +4,7 @@ import { RotateCcw, Trophy, Check, Lightbulb } from "lucide-react";
 import { SPOT_DIFF_SCENES, type SpotDiffScene } from "@/data/miniGames";
 import { usePassport } from "@/context/PassportContext";
 
-const HIT_RADIUS = 9; // % distance tolerance for a click to count
+const HIT_RADIUS = 12; // % distance tolerance for a click to count
 const NUM_DIFFS = 7;
 
 function pickScene(prevId?: string): SpotDiffScene {
