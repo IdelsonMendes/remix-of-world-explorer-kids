@@ -52,11 +52,15 @@ export function SpotDifferencesGame() {
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
 
+    // Compute distance in pixel space so wide images don't bias the X axis
+    const aspect = rect.width / rect.height;
     let hitIdx = -1;
     let bestDist = Infinity;
     diffs.forEach((d, i) => {
       if (found[i]) return;
-      const dist = Math.hypot(d.x - x, d.y - y);
+      const dx = (d.x - x) * aspect;
+      const dy = d.y - y;
+      const dist = Math.hypot(dx, dy);
       if (dist <= HIT_RADIUS && dist < bestDist) {
         bestDist = dist;
         hitIdx = i;
