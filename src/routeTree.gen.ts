@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LobbyRouteImport } from './routes/lobby'
+import { Route as ContaRouteImport } from './routes/conta'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PaisSlugRouteImport } from './routes/pais.$slug'
 import { Route as BrincadeirasGameIdRouteImport } from './routes/brincadeiras.$gameId'
@@ -23,6 +24,11 @@ const LoginRoute = LoginRouteImport.update({
 const LobbyRoute = LobbyRouteImport.update({
   id: '/lobby',
   path: '/lobby',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContaRoute = ContaRouteImport.update({
+  id: '/conta',
+  path: '/conta',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -43,6 +49,7 @@ const BrincadeirasGameIdRoute = BrincadeirasGameIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/conta': typeof ContaRoute
   '/lobby': typeof LobbyRoute
   '/login': typeof LoginRoute
   '/brincadeiras/$gameId': typeof BrincadeirasGameIdRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/conta': typeof ContaRoute
   '/lobby': typeof LobbyRoute
   '/login': typeof LoginRoute
   '/brincadeiras/$gameId': typeof BrincadeirasGameIdRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/conta': typeof ContaRoute
   '/lobby': typeof LobbyRoute
   '/login': typeof LoginRoute
   '/brincadeiras/$gameId': typeof BrincadeirasGameIdRoute
@@ -65,12 +74,25 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/lobby' | '/login' | '/brincadeiras/$gameId' | '/pais/$slug'
+  fullPaths:
+    | '/'
+    | '/conta'
+    | '/lobby'
+    | '/login'
+    | '/brincadeiras/$gameId'
+    | '/pais/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/lobby' | '/login' | '/brincadeiras/$gameId' | '/pais/$slug'
+  to:
+    | '/'
+    | '/conta'
+    | '/lobby'
+    | '/login'
+    | '/brincadeiras/$gameId'
+    | '/pais/$slug'
   id:
     | '__root__'
     | '/'
+    | '/conta'
     | '/lobby'
     | '/login'
     | '/brincadeiras/$gameId'
@@ -79,6 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContaRoute: typeof ContaRoute
   LobbyRoute: typeof LobbyRoute
   LoginRoute: typeof LoginRoute
   BrincadeirasGameIdRoute: typeof BrincadeirasGameIdRoute
@@ -99,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/lobby'
       fullPath: '/lobby'
       preLoaderRoute: typeof LobbyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conta': {
+      id: '/conta'
+      path: '/conta'
+      fullPath: '/conta'
+      preLoaderRoute: typeof ContaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -127,6 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContaRoute: ContaRoute,
   LobbyRoute: LobbyRoute,
   LoginRoute: LoginRoute,
   BrincadeirasGameIdRoute: BrincadeirasGameIdRoute,
