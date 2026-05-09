@@ -1,6 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { LogOut, Map, Sparkles, Stamp as StampIcon, Award } from "lucide-react";
+import { LogOut, Map, Sparkles, Stamp as StampIcon, Award, UserCog, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { getAvatarSrc, usePassport } from "@/context/PassportContext";
 import { COUNTRY_LIST, COUNTRIES } from "@/data/countries";
 import { MINI_GAMES, COUNTRY_ISO } from "@/data/miniGames";
@@ -54,21 +62,32 @@ function LobbyPage() {
           <Link to="/" className="font-display font-bold text-lg">
             Exploradores <span className="text-primary">do Mundo</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 rounded-full bg-card border-2 border-border pl-1 pr-3 py-1">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="inline-flex items-center gap-2 rounded-full bg-card border-2 border-border pl-1 pr-3 py-1 hover:border-primary/40 transition outline-none">
               <img src={avatarSrc} alt={explorerName} className="h-8 w-8 rounded-full object-contain bg-muted/40" />
-              <span className="font-bold text-sm">{explorerName}</span>
-            </div>
-            <button
-              onClick={() => {
-                logout();
-                navigate({ to: "/" });
-              }}
-              className="inline-flex items-center gap-2 rounded-full bg-card border-2 border-border px-4 py-2 text-sm font-bold hover:border-destructive/40 hover:text-destructive transition"
-            >
-              <LogOut className="h-4 w-4" /> Sair
-            </button>
-          </div>
+              <span className="font-bold text-sm hidden sm:inline">{explorerName}</span>
+              <ChevronDown className="h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-52">
+              <DropdownMenuLabel>Olá, {explorerName}!</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/conta" className="cursor-pointer">
+                  <UserCog className="h-4 w-4 mr-2" /> Minha conta
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={async () => {
+                  await logout();
+                  navigate({ to: "/" });
+                }}
+                className="text-destructive focus:text-destructive cursor-pointer"
+              >
+                <LogOut className="h-4 w-4 mr-2" /> Sair
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
