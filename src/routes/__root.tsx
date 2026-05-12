@@ -35,6 +35,12 @@ export const Route = createRootRoute({
       { name: "author", content: "Exploradores do Mundo" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { property: "og:title", content: "Exploradores do Mundo" },
+      { name: "twitter:title", content: "Exploradores do Mundo" },
+      { property: "og:description", content: "Plataforma educativa de turismo digital para crianças." },
+      { name: "twitter:description", content: "Plataforma educativa de turismo digital para crianças." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b30bd396-a767-4ebc-bc8d-6146e55aa84c/id-preview-e0de0982--125821f4-b5bc-4794-a551-41f000a54b2c.lovable.app-1778289668369.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b30bd396-a767-4ebc-bc8d-6146e55aa84c/id-preview-e0de0982--125821f4-b5bc-4794-a551-41f000a54b2c.lovable.app-1778289668369.png" },
     ],
     links: [
       {
