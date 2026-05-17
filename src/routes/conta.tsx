@@ -259,6 +259,25 @@ function AccountPage() {
           </button>
         </section>
 
+        {/* Tutorial */}
+        <section className="rounded-3xl border-2 border-border bg-card p-6 sm:p-8 shadow-sticker">
+          <h2 className="font-display text-2xl font-bold inline-flex items-center gap-2">
+            <HelpCircle className="h-5 w-5 text-primary" /> Tutorial
+          </h2>
+          <p className="mt-2 text-sm text-foreground/70">
+            Quer rever a apresentação da Luna Maria? É só clicar abaixo.
+          </p>
+          <button
+            onClick={() => {
+              clearTourSeen(session.user.id);
+              navigate({ to: "/lobby", search: { tour: "1" } as never });
+            }}
+            className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
+          >
+            <HelpCircle className="h-4 w-4" /> Repetir tutorial
+          </button>
+        </section>
+
         {/* Danger zone */}
         <section className="rounded-3xl border-2 border-destructive/40 bg-destructive/5 p-6 sm:p-8">
           <h2 className="font-display text-2xl font-bold text-destructive inline-flex items-center gap-2">
