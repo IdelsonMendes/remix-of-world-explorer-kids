@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, SkipForward, Sparkles, X } from "lucide-react";
 import luna from "@/assets/luna-mascot.png";
