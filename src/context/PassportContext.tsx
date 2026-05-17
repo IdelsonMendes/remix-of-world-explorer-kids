@@ -233,6 +233,7 @@ export function PassportProvider({ children }: { children: ReactNode }) {
         }
         setMiniGameScores(next);
       }
+      setProfileLoading(false);
     })();
 
     return () => {
