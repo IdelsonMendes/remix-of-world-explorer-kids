@@ -81,6 +81,7 @@ export type GameId = "memoria" | "bandeiras" | "safari" | "sons" | "monumentos" 
 
 type PassportState = {
   loading: boolean;
+  profileLoading: boolean;
   session: Session | null;
   explorerName: string;
   setExplorerName: (name: string) => void;
@@ -138,6 +139,7 @@ const emptyMiniGames: Record<GameId, number> = {
 export function PassportProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   const [explorerName, setExplorerNameState] = useState<string>("");
   const [avatar, setAvatarState] = useState<string>("");
@@ -161,12 +163,16 @@ export function PassportProvider({ children }: { children: ReactNode }) {
         setStoryRead({ ...emptyProgress });
         setGamesDone({ ...emptyProgress });
         setMiniGameScores({ ...emptyMiniGames });
+        setProfileLoading(false);
+      } else {
+        setProfileLoading(true);
       }
     });
 
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       userIdRef.current = data.session?.user.id ?? null;
+      if (!data.session) setProfileLoading(false);
       setLoading(false);
     });
 
@@ -227,6 +233,7 @@ export function PassportProvider({ children }: { children: ReactNode }) {
         }
         setMiniGameScores(next);
       }
+      setProfileLoading(false);
     })();
 
     return () => {
@@ -366,6 +373,7 @@ export function PassportProvider({ children }: { children: ReactNode }) {
     <PassportContext.Provider
       value={{
         loading,
+        profileLoading,
         session,
         explorerName,
         setExplorerName,
