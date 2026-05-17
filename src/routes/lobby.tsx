@@ -93,7 +93,7 @@ function LobbyPage() {
             Exploradores <span className="text-primary">do Mundo</span>
           </Link>
           <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex items-center gap-2 rounded-full bg-card border-2 border-border pl-1 pr-3 py-1 hover:border-primary/40 transition outline-none">
+            <DropdownMenuTrigger data-tour="account-menu" className="inline-flex items-center gap-2 rounded-full bg-card border-2 border-border pl-1 pr-3 py-1 hover:border-primary/40 transition outline-none">
               <img src={avatarSrc} alt={explorerName} className="h-8 w-8 rounded-full object-contain bg-muted/40" />
               <span className="font-bold text-sm hidden sm:inline">{explorerName}</span>
               <ChevronDown className="h-4 w-4" />
