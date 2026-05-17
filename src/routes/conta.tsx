@@ -270,7 +270,7 @@ function AccountPage() {
           <button
             onClick={() => {
               clearTourSeen(session.user.id);
-              navigate({ to: "/lobby", search: { tour: "1" } as never });
+              window.location.href = "/lobby?tour=1";
             }}
             className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
           >
