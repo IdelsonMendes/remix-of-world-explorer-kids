@@ -137,6 +137,9 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
   const isFirst = stepIdx === 0;
 
   // Decide bubble position
+  const SAFE_BOTTOM = 24;
+  const SAFE_TOP = 16;
+  const ESTIMATED_BUBBLE_H = 280;
   const bubblePos = useMemo(() => {
     if (!rect || vp.h === 0) {
       // Centered
@@ -144,10 +147,15 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
     }
     const spaceBelow = vp.h - (rect.top + rect.height);
     const spaceAbove = rect.top;
-    if (spaceBelow >= 220 || spaceBelow >= spaceAbove) {
-      return { mode: "below" as const, y: Math.min(rect.top + rect.height + 14, vp.h - 240) };
+    if (spaceBelow >= ESTIMATED_BUBBLE_H + SAFE_BOTTOM || spaceBelow >= spaceAbove) {
+      const y = Math.min(
+        rect.top + rect.height + 14,
+        Math.max(SAFE_TOP, vp.h - ESTIMATED_BUBBLE_H - SAFE_BOTTOM),
+      );
+      return { mode: "below" as const, y };
     }
-    return { mode: "above" as const, y: Math.max(rect.top - 14 - 220, 12) };
+    const y = Math.max(SAFE_TOP, rect.top - 14 - ESTIMATED_BUBBLE_H);
+    return { mode: "above" as const, y };
   }, [rect, vp]);
 
   const next = () => {
@@ -202,12 +210,12 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
 
         {/* Bubble + Luna */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 w-[min(92vw,420px)]"
-          style={
+          className={
             bubblePos.mode === "center"
-              ? { top: "50%", transform: "translate(-50%, -50%)" }
-              : { top: bubblePos.y }
+              ? "absolute inset-0 flex items-center justify-center px-3 py-4 pointer-events-none"
+              : "absolute left-1/2 -translate-x-1/2 w-[min(92vw,420px)] max-w-[calc(100vw-24px)] px-1 pointer-events-none"
           }
+          style={bubblePos.mode === "center" ? undefined : { top: bubblePos.y }}
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -216,7 +224,11 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.97 }}
               transition={{ type: "spring", stiffness: 300, damping: 24 }}
-              className="relative"
+              className={
+                bubblePos.mode === "center"
+                  ? "relative w-[min(92vw,420px)] max-h-[calc(100dvh-32px)] overflow-y-auto pointer-events-auto"
+                  : "relative max-h-[calc(100dvh-48px)] overflow-y-auto pointer-events-auto"
+              }
             >
               <div className="rounded-[2rem] bg-gradient-tropical p-1 shadow-float">
                 <div className="rounded-[1.85rem] bg-card p-5 sm:p-6">
