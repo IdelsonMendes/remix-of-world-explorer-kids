@@ -91,7 +91,7 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
   }, []);
 
   // Measure target each step / on resize / scroll
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!open) return;
 
     const measure = () => {
