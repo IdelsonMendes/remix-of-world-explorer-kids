@@ -305,7 +305,7 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
               <button
                 onClick={onClose}
                 aria-label="Fechar tutorial"
-                className="absolute -top-2 -right-2 h-8 w-8 grid place-items-center rounded-full bg-card border-2 border-border shadow-sticker hover:scale-105 transition"
+                className="absolute -top-3 -right-3 z-20 h-9 w-9 grid place-items-center rounded-full bg-card border-2 border-border shadow-sticker hover:scale-105 transition"
               >
                 <X className="h-4 w-4" />
               </button>
