@@ -210,12 +210,12 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
 
         {/* Bubble + Luna */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 w-[min(92vw,420px)]"
-          style={
+          className={
             bubblePos.mode === "center"
-              ? { top: "50%", transform: "translate(-50%, -50%)" }
-              : { top: bubblePos.y }
+              ? "absolute inset-0 flex items-center justify-center px-3 py-4 pointer-events-none"
+              : "absolute left-1/2 -translate-x-1/2 w-[min(92vw,420px)] max-w-[calc(100vw-24px)] px-1 pointer-events-none"
           }
+          style={bubblePos.mode === "center" ? undefined : { top: bubblePos.y }}
         >
           <AnimatePresence mode="wait">
             <motion.div
