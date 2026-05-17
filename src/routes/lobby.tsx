@@ -239,7 +239,7 @@ function LobbyPage() {
           </div>
 
           {/* Map */}
-          <div>
+          <div data-tour="map">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xl font-display font-bold flex items-center gap-2">
                 <Map className="h-5 w-5 text-primary" /> Mapa de descoberta
