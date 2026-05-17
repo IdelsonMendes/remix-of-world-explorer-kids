@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Save, Trash2, LogOut, KeyRound, Mail, User as UserIcon } from "lucide-react";
+import { ArrowLeft, Save, Trash2, LogOut, KeyRound, Mail, User as UserIcon, HelpCircle } from "lucide-react";
 import { AVATAR_OPTIONS, getAvatarSrc, usePassport } from "@/context/PassportContext";
 import { supabase } from "@/integrations/supabase/client";
 import { deleteMyAccount } from "@/lib/account.functions";
+import { clearTourSeen } from "@/components/LobbyTour";
 
 export const Route = createFileRoute("/conta")({
   component: AccountPage,
