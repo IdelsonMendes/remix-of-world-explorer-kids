@@ -135,6 +135,13 @@ function LoginPage() {
 
   // Profile completion view (logged in but no name/avatar yet — e.g. after Google login)
   if (session && !isLoggedIn) {
+    if (profileLoading) {
+      return (
+        <div className="min-h-screen grid place-items-center">
+          <div className="text-foreground/60 font-bold">Carregando...</div>
+        </div>
+      );
+    }
     return (
       <ProfileCompletion
         defaultName={explorerName || (session.user.user_metadata?.full_name as string) || ""}
