@@ -109,11 +109,18 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
       // Measure after scroll settles
       requestAnimationFrame(() => {
         const r = el.getBoundingClientRect();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        // Clamp to viewport so very tall targets still show a proper spotlight
+        const top = Math.max(8, r.top - PAD);
+        const left = Math.max(8, r.left - PAD);
+        const right = Math.min(vw - 8, r.right + PAD);
+        const bottom = Math.min(vh - 8, r.bottom + PAD);
         setRect({
-          top: r.top - PAD,
-          left: r.left - PAD,
-          width: r.width + PAD * 2,
-          height: r.height + PAD * 2,
+          top,
+          left,
+          width: Math.max(40, right - left),
+          height: Math.max(40, bottom - top),
         });
       });
     };
