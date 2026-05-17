@@ -311,6 +311,8 @@ function LobbyPage() {
           </div>
         </section>
       </main>
+
+      <LobbyTour open={tourOpen} onClose={closeTour} />
     </div>
   );
 }
