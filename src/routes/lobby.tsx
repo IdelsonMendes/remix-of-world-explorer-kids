@@ -71,6 +71,18 @@ function LobbyPage() {
 
 
   if (!isLoggedIn) {
+    if (profileLoading || !session) {
+      // Either still loading profile, or really logged out
+      if (!session && typeof window !== "undefined") {
+        navigate({ to: "/login" });
+      }
+      return (
+        <div className="min-h-screen grid place-items-center">
+          <div className="text-foreground/60 font-bold">Carregando...</div>
+        </div>
+      );
+    }
+    // Session exists but no profile name → finish setup
     if (typeof window !== "undefined") {
       navigate({ to: "/login" });
     }
