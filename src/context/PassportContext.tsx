@@ -163,6 +163,9 @@ export function PassportProvider({ children }: { children: ReactNode }) {
         setStoryRead({ ...emptyProgress });
         setGamesDone({ ...emptyProgress });
         setMiniGameScores({ ...emptyMiniGames });
+        setProfileLoading(false);
+      } else {
+        setProfileLoading(true);
       }
     });
 
