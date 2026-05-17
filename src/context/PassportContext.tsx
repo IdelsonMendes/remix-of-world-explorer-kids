@@ -172,6 +172,7 @@ export function PassportProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       userIdRef.current = data.session?.user.id ?? null;
+      if (!data.session) setProfileLoading(false);
       setLoading(false);
     });
 
