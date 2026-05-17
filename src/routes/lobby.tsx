@@ -34,12 +34,40 @@ function LobbyPage() {
     avatar,
     isLoggedIn,
     logout,
+    session,
     stamps,
     storyRead,
     gamesDone,
     miniGameScores,
   } = usePassport();
   const avatarSrc = getAvatarSrc(avatar);
+  const [tourOpen, setTourOpen] = useState(false);
+
+  const userId = session?.user.id ?? null;
+
+  // Auto-start on first visit, or when ?tour=1 is in URL
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const forced = params.get("tour") === "1";
+    if (forced || !hasSeenTour(userId)) {
+      // Tiny delay so the lobby has time to layout before measuring spotlight targets
+      const t = window.setTimeout(() => setTourOpen(true), 250);
+      if (forced) {
+        params.delete("tour");
+        const qs = params.toString();
+        window.history.replaceState({}, "", window.location.pathname + (qs ? `?${qs}` : ""));
+      }
+      return () => window.clearTimeout(t);
+    }
+  }, [isLoggedIn, userId]);
+
+  const closeTour = () => {
+    markTourSeen(userId);
+    setTourOpen(false);
+  };
+
 
   if (!isLoggedIn) {
     if (typeof window !== "undefined") {
