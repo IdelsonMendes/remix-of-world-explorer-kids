@@ -210,7 +210,7 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
         {/* Skip button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 rounded-full bg-card/90 backdrop-blur px-4 py-2 text-sm font-bold shadow-sticker hover:-translate-y-0.5 transition"
+          className="absolute top-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-card/90 backdrop-blur px-4 py-2 text-sm font-bold shadow-sticker hover:-translate-y-0.5 transition"
         >
           <SkipForward className="h-4 w-4" /> Pular
         </button>
