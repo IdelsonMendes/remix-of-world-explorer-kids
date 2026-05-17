@@ -224,7 +224,11 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.97 }}
               transition={{ type: "spring", stiffness: 300, damping: 24 }}
-              className="relative"
+              className={
+                bubblePos.mode === "center"
+                  ? "relative w-[min(92vw,420px)] max-h-[calc(100dvh-32px)] overflow-y-auto pointer-events-auto"
+                  : "relative max-h-[calc(100dvh-48px)] overflow-y-auto pointer-events-auto"
+              }
             >
               <div className="rounded-[2rem] bg-gradient-tropical p-1 shadow-float">
                 <div className="rounded-[1.85rem] bg-card p-5 sm:p-6">
