@@ -106,6 +106,12 @@ function LobbyPage() {
                   <UserCog className="h-4 w-4 mr-2" /> Minha conta
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setTourOpen(true)}
+                className="cursor-pointer"
+              >
+                <HelpCircle className="h-4 w-4 mr-2" /> Repetir tutorial
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={async () => {
