@@ -373,6 +373,7 @@ export function PassportProvider({ children }: { children: ReactNode }) {
     <PassportContext.Provider
       value={{
         loading,
+        profileLoading,
         session,
         explorerName,
         setExplorerName,
