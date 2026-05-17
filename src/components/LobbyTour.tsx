@@ -28,7 +28,7 @@ const STEPS: Step[] = [
   },
   {
     id: "games",
-    target: "[data-tour='games']",
+    target: "[data-tour='first-game']",
     emoji: "🎮",
     title: "Brincadeiras",
     lines: ["Aqui ficam os jogos!", "Você aprende brincando."],
@@ -210,7 +210,7 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
         {/* Skip button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 rounded-full bg-card/90 backdrop-blur px-4 py-2 text-sm font-bold shadow-sticker hover:-translate-y-0.5 transition"
+          className="absolute top-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-card/90 backdrop-blur px-4 py-2 text-sm font-bold shadow-sticker hover:-translate-y-0.5 transition"
         >
           <SkipForward className="h-4 w-4" /> Pular
         </button>
@@ -233,11 +233,11 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
               transition={{ type: "spring", stiffness: 300, damping: 24 }}
               className={
                 bubblePos.mode === "center"
-                  ? "relative w-[min(92vw,420px)] max-h-[calc(100dvh-32px)] overflow-y-auto pointer-events-auto"
-                  : "relative max-h-[calc(100dvh-48px)] overflow-y-auto pointer-events-auto"
+                  ? "relative w-[min(92vw,420px)] pointer-events-auto"
+                  : "relative w-full pointer-events-auto"
               }
             >
-              <div className="rounded-[2rem] bg-gradient-tropical p-1 shadow-float">
+              <div className="rounded-[2rem] bg-gradient-tropical p-1 shadow-float max-h-[calc(100dvh-48px)] overflow-y-auto">
                 <div className="rounded-[1.85rem] bg-card p-5 sm:p-6">
                   <div className="flex items-start gap-4">
                     <motion.img
@@ -305,7 +305,7 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
               <button
                 onClick={onClose}
                 aria-label="Fechar tutorial"
-                className="absolute -top-2 -right-2 h-8 w-8 grid place-items-center rounded-full bg-card border-2 border-border shadow-sticker hover:scale-105 transition"
+                className="absolute -top-3 -right-3 z-20 h-9 w-9 grid place-items-center rounded-full bg-card border-2 border-border shadow-sticker hover:scale-105 transition"
               >
                 <X className="h-4 w-4" />
               </button>
