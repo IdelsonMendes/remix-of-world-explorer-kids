@@ -137,6 +137,9 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
   const isFirst = stepIdx === 0;
 
   // Decide bubble position
+  const SAFE_BOTTOM = 24;
+  const SAFE_TOP = 16;
+  const ESTIMATED_BUBBLE_H = 280;
   const bubblePos = useMemo(() => {
     if (!rect || vp.h === 0) {
       // Centered
@@ -144,10 +147,15 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
     }
     const spaceBelow = vp.h - (rect.top + rect.height);
     const spaceAbove = rect.top;
-    if (spaceBelow >= 220 || spaceBelow >= spaceAbove) {
-      return { mode: "below" as const, y: Math.min(rect.top + rect.height + 14, vp.h - 240) };
+    if (spaceBelow >= ESTIMATED_BUBBLE_H + SAFE_BOTTOM || spaceBelow >= spaceAbove) {
+      const y = Math.min(
+        rect.top + rect.height + 14,
+        Math.max(SAFE_TOP, vp.h - ESTIMATED_BUBBLE_H - SAFE_BOTTOM),
+      );
+      return { mode: "below" as const, y };
     }
-    return { mode: "above" as const, y: Math.max(rect.top - 14 - 220, 12) };
+    const y = Math.max(SAFE_TOP, rect.top - 14 - ESTIMATED_BUBBLE_H);
+    return { mode: "above" as const, y };
   }, [rect, vp]);
 
   const next = () => {
