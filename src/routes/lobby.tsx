@@ -251,7 +251,7 @@ function LobbyPage() {
         </section>
 
         {/* Mini-games */}
-        <section>
+        <section data-tour="games">
           <div className="flex items-end justify-between mb-5 flex-wrap gap-2">
             <div>
               <h2 className="text-2xl sm:text-3xl font-display font-bold">
