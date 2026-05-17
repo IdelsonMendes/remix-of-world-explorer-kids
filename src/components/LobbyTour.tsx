@@ -37,8 +37,15 @@ const STEPS: Step[] = [
     id: "profile",
     target: "[data-tour='profile']",
     emoji: "🧑‍🚀",
-    title: "Seu personagem",
-    lines: ["Aqui você muda seu avatar e nome.", "Deixe do seu jeito!"],
+    title: "Seu perfil",
+    lines: ["Aqui ficam seu nome e sua foto.", "E também o seu progresso na plataforma!"],
+  },
+  {
+    id: "account",
+    target: "[data-tour='account-menu']",
+    emoji: "⚙️",
+    title: "Sua conta",
+    lines: ["Toque aqui para mudar seu nome, avatar e e-mail.", "É o seu cantinho de ajustes!"],
   },
   {
     id: "passport",
