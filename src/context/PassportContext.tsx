@@ -81,6 +81,7 @@ export type GameId = "memoria" | "bandeiras" | "safari" | "sons" | "monumentos" 
 
 type PassportState = {
   loading: boolean;
+  profileLoading: boolean;
   session: Session | null;
   explorerName: string;
   setExplorerName: (name: string) => void;
