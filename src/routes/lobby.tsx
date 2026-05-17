@@ -1,6 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { LogOut, Map, Sparkles, Stamp as StampIcon, Award, UserCog, ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { LogOut, Map, Sparkles, Stamp as StampIcon, Award, UserCog, ChevronDown, HelpCircle } from "lucide-react";
+import { LobbyTour, hasSeenTour, markTourSeen } from "@/components/LobbyTour";
 import {
   DropdownMenu,
   DropdownMenuContent,
