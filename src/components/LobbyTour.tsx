@@ -15,7 +15,7 @@ const STEPS: Step[] = [
   {
     id: "welcome",
     target: null,
-    emoji: "🌎✨",
+    emoji: "",
     title: "Oi! Eu sou a Luna Maria",
     lines: ["Vou te mostrar esse mundo divertido!"],
   },
