@@ -233,11 +233,11 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
               transition={{ type: "spring", stiffness: 300, damping: 24 }}
               className={
                 bubblePos.mode === "center"
-                  ? "relative w-[min(92vw,420px)] max-h-[calc(100dvh-32px)] overflow-y-auto pointer-events-auto"
-                  : "relative max-h-[calc(100dvh-48px)] overflow-y-auto pointer-events-auto"
+                  ? "relative w-[min(92vw,420px)] pointer-events-auto"
+                  : "relative w-full pointer-events-auto"
               }
             >
-              <div className="rounded-[2rem] bg-gradient-tropical p-1 shadow-float">
+              <div className="rounded-[2rem] bg-gradient-tropical p-1 shadow-float max-h-[calc(100dvh-48px)] overflow-y-auto">
                 <div className="rounded-[1.85rem] bg-card p-5 sm:p-6">
                   <div className="flex items-start gap-4">
                     <motion.img
