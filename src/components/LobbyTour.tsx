@@ -28,7 +28,7 @@ const STEPS: Step[] = [
   },
   {
     id: "games",
-    target: "[data-tour='games']",
+    target: "[data-tour='first-game']",
     emoji: "🎮",
     title: "Brincadeiras",
     lines: ["Aqui ficam os jogos!", "Você aprende brincando."],
