@@ -21,7 +21,7 @@ type Mode = "signin" | "signup";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { isLoggedIn, session, setProfile, explorerName, avatar } = usePassport();
+  const { isLoggedIn, session, profileLoading, setProfile, explorerName, avatar } = usePassport();
 
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
