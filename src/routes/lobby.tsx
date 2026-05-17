@@ -33,6 +33,7 @@ function LobbyPage() {
     explorerName,
     avatar,
     isLoggedIn,
+    profileLoading,
     logout,
     session,
     stamps,
