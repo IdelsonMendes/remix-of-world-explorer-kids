@@ -66,19 +66,48 @@ function LoginPage() {
             data: { explorer_name: name.trim(), avatar: chosenAvatar },
           },
         });
-        if (err) throw err;
+        if (err) {
+          const msg = err.message.toLowerCase();
+          if (msg.includes("registered") || msg.includes("already") || msg.includes("exists")) {
+            setError("Este email já está cadastrado. Faça login.");
+            setMode("signin");
+            return;
+          }
+          throw err;
+        }
+        // Supabase returns an "obfuscated" user with empty identities when the
+        // email already exists (and auto-confirm is on). Detect and surface it.
+        if (data.user && data.user.identities && data.user.identities.length === 0) {
+          setError("Este email já está cadastrado. Faça login.");
+          setMode("signin");
+          return;
+        }
         if (data.session) {
           await setProfile(name.trim(), chosenAvatar);
           navigate({ to: "/lobby" });
         } else {
-          setInfo("Conta criada! Confirme seu email para entrar.");
+          // Auto-confirm is enabled, but if a session was not returned, sign in directly.
+          const { error: signInErr } = await supabase.auth.signInWithPassword({
+            email: email.trim(),
+            password,
+          });
+          if (signInErr) throw signInErr;
+          await setProfile(name.trim(), chosenAvatar);
+          navigate({ to: "/lobby" });
         }
       } else {
         const { error: err } = await supabase.auth.signInWithPassword({
           email: email.trim(),
           password,
         });
-        if (err) throw err;
+        if (err) {
+          const msg = err.message.toLowerCase();
+          if (msg.includes("invalid") || msg.includes("credentials")) {
+            setError("Email ou senha incorretos.");
+            return;
+          }
+          throw err;
+        }
         // Navigation handled by useEffect once profile loads
       }
     } catch (err) {
