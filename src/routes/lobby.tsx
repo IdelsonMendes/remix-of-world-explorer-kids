@@ -173,7 +173,7 @@ function LobbyPage() {
         {/* Passport + Map */}
         <section className="grid lg:grid-cols-[1fr_1.3fr] gap-6">
           {/* Passport */}
-          <div className="rounded-[2rem] bg-card p-6 sm:p-7 border-4 border-card shadow-float">
+          <div data-tour="passport" className="rounded-[2rem] bg-card p-6 sm:p-7 border-4 border-card shadow-float">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-display font-bold flex items-center gap-2">
                 <StampIcon className="h-5 w-5 text-primary" /> Meu Passaporte
