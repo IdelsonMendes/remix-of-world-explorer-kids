@@ -268,6 +268,7 @@ function LobbyPage() {
               return (
                 <motion.div
                   key={g.id}
+                  data-tour={i === 0 ? "first-game" : undefined}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06 }}
