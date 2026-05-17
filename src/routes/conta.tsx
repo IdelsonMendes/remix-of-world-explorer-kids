@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Save, Trash2, LogOut, KeyRound, Mail, User as UserIcon } from "lucide-react";
+import { ArrowLeft, Save, Trash2, LogOut, KeyRound, Mail, User as UserIcon, HelpCircle } from "lucide-react";
 import { AVATAR_OPTIONS, getAvatarSrc, usePassport } from "@/context/PassportContext";
 import { supabase } from "@/integrations/supabase/client";
 import { deleteMyAccount } from "@/lib/account.functions";
+import { clearTourSeen } from "@/components/LobbyTour";
 
 export const Route = createFileRoute("/conta")({
   component: AccountPage,
@@ -255,6 +256,25 @@ function AccountPage() {
             className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition disabled:opacity-50"
           >
             <Save className="h-4 w-4" /> Atualizar senha
+          </button>
+        </section>
+
+        {/* Tutorial */}
+        <section className="rounded-3xl border-2 border-border bg-card p-6 sm:p-8 shadow-sticker">
+          <h2 className="font-display text-2xl font-bold inline-flex items-center gap-2">
+            <HelpCircle className="h-5 w-5 text-primary" /> Tutorial
+          </h2>
+          <p className="mt-2 text-sm text-foreground/70">
+            Quer rever a apresentação da Luna Maria? É só clicar abaixo.
+          </p>
+          <button
+            onClick={() => {
+              clearTourSeen(session.user.id);
+              window.location.href = "/lobby?tour=1";
+            }}
+            className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
+          >
+            <HelpCircle className="h-4 w-4" /> Repetir tutorial
           </button>
         </section>
 

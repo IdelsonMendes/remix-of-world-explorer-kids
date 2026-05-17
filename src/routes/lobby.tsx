@@ -1,6 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { LogOut, Map, Sparkles, Stamp as StampIcon, Award, UserCog, ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { LogOut, Map, Sparkles, Stamp as StampIcon, Award, UserCog, ChevronDown, HelpCircle } from "lucide-react";
+import { LobbyTour, hasSeenTour, markTourSeen } from "@/components/LobbyTour";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,12 +34,40 @@ function LobbyPage() {
     avatar,
     isLoggedIn,
     logout,
+    session,
     stamps,
     storyRead,
     gamesDone,
     miniGameScores,
   } = usePassport();
   const avatarSrc = getAvatarSrc(avatar);
+  const [tourOpen, setTourOpen] = useState(false);
+
+  const userId = session?.user.id ?? null;
+
+  // Auto-start on first visit, or when ?tour=1 is in URL
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const forced = params.get("tour") === "1";
+    if (forced || !hasSeenTour(userId)) {
+      // Tiny delay so the lobby has time to layout before measuring spotlight targets
+      const t = window.setTimeout(() => setTourOpen(true), 250);
+      if (forced) {
+        params.delete("tour");
+        const qs = params.toString();
+        window.history.replaceState({}, "", window.location.pathname + (qs ? `?${qs}` : ""));
+      }
+      return () => window.clearTimeout(t);
+    }
+  }, [isLoggedIn, userId]);
+
+  const closeTour = () => {
+    markTourSeen(userId);
+    setTourOpen(false);
+  };
+
 
   if (!isLoggedIn) {
     if (typeof window !== "undefined") {
@@ -76,6 +106,12 @@ function LobbyPage() {
                   <UserCog className="h-4 w-4 mr-2" /> Minha conta
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setTourOpen(true)}
+                className="cursor-pointer"
+              >
+                <HelpCircle className="h-4 w-4 mr-2" /> Repetir tutorial
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={async () => {
@@ -100,6 +136,7 @@ function LobbyPage() {
         >
           <div className="rounded-[2.35rem] bg-card p-7 sm:p-10 grid md:grid-cols-[auto_1fr_auto] gap-6 items-center">
             <motion.div
+              data-tour="profile"
               animate={{ rotate: [0, -5, 5, 0] }}
               transition={{ repeat: Infinity, duration: 4 }}
               className="h-24 w-24 sm:h-28 sm:w-28 rounded-3xl bg-gradient-sunset grid place-items-center overflow-hidden shadow-float"
@@ -136,7 +173,7 @@ function LobbyPage() {
         {/* Passport + Map */}
         <section className="grid lg:grid-cols-[1fr_1.3fr] gap-6">
           {/* Passport */}
-          <div className="rounded-[2rem] bg-card p-6 sm:p-7 border-4 border-card shadow-float">
+          <div data-tour="passport" className="rounded-[2rem] bg-card p-6 sm:p-7 border-4 border-card shadow-float">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-display font-bold flex items-center gap-2">
                 <StampIcon className="h-5 w-5 text-primary" /> Meu Passaporte
@@ -202,7 +239,7 @@ function LobbyPage() {
           </div>
 
           {/* Map */}
-          <div>
+          <div data-tour="map">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xl font-display font-bold flex items-center gap-2">
                 <Map className="h-5 w-5 text-primary" /> Mapa de descoberta
@@ -214,7 +251,7 @@ function LobbyPage() {
         </section>
 
         {/* Mini-games */}
-        <section>
+        <section data-tour="games">
           <div className="flex items-end justify-between mb-5 flex-wrap gap-2">
             <div>
               <h2 className="text-2xl sm:text-3xl font-display font-bold">
@@ -274,6 +311,8 @@ function LobbyPage() {
           </div>
         </section>
       </main>
+
+      <LobbyTour open={tourOpen} onClose={closeTour} />
     </div>
   );
 }
