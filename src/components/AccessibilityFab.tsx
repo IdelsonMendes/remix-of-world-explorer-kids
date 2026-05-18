@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Accessibility, Volume2, VolumeX, Mic, MicOff, X, Square } from "lucide-react";
 import { useNarration } from "@/context/NarrationContext";
 
 export function AccessibilityFab() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const [open, setOpen] = useState(false);
   const {
     narrationOn,
