@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 type NarrationState = {
   narrationOn: boolean;
