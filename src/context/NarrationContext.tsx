@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 type NarrationState = {
   narrationOn: boolean;
@@ -130,12 +131,15 @@ function matchCommand(transcript: string, nav: NavFn, speak: (s: string) => void
 }
 
 export function NarrationProvider({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();
   const [narrationOn, setNarrationOn] = useState<boolean>(() => loadBool(STORAGE_NARRATION));
   const [voiceCommandsOn, setVoiceCommandsOn] = useState<boolean>(() => loadBool(STORAGE_VOICE));
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const recognitionRef = useRef<any>(null);
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
+  const voiceCmdRef = useRef(voiceCommandsOn);
+  useEffect(() => { voiceCmdRef.current = voiceCommandsOn; }, [voiceCommandsOn]);
 
   // Pick a Portuguese voice when available
   useEffect(() => {
@@ -226,7 +230,7 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!voiceCommandsOn) {
-      recognitionRef.current?.stop?.();
+      try { recognitionRef.current?.stop?.(); } catch { /* noop */ }
       recognitionRef.current = null;
       setListening(false);
       return;
@@ -237,47 +241,64 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
     rec.lang = "pt-BR";
     rec.continuous = true;
     rec.interimResults = false;
-    rec.onstart = () => setListening(true);
+    rec.maxAlternatives = 3;
+    rec.onstart = () => {
+      // eslint-disable-next-line no-console
+      console.log("[voice] listening...");
+      setListening(true);
+    };
     rec.onend = () => {
+      // eslint-disable-next-line no-console
+      console.log("[voice] ended");
       setListening(false);
-      // Auto-restart while toggle stays on
-      if (voiceCommandsOn) {
-        try {
-          rec.start();
-        } catch {
-          /* noop */
-        }
+      if (voiceCmdRef.current) {
+        // Some browsers throw if start() is called too soon
+        setTimeout(() => {
+          if (!voiceCmdRef.current) return;
+          try { rec.start(); } catch (e) { console.warn("[voice] restart failed", e); }
+        }, 250);
       }
     };
-    rec.onerror = () => {
+    rec.onerror = (e: any) => {
+      // eslint-disable-next-line no-console
+      console.warn("[voice] error", e?.error || e);
       setListening(false);
+      if (e?.error === "not-allowed" || e?.error === "service-not-allowed") {
+        speak("Não consegui acessar o microfone. Permita o uso do microfone nas configurações do navegador.");
+        voiceCmdRef.current = false;
+        saveBool(STORAGE_VOICE, false);
+        setVoiceCommandsOn(false);
+      }
     };
     rec.onresult = (event: any) => {
-      const last = event.results[event.results.length - 1];
-      if (!last?.[0]?.transcript) return;
-      const transcript = last[0].transcript as string;
-      const nav: NavFn = (path) => {
-        window.history.pushState({}, "", path);
-        window.dispatchEvent(new PopStateEvent("popstate"));
-      };
-      matchCommand(transcript, nav, speak);
+      // Iterate ALL new results, try every alternative
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const res = event.results[i];
+        if (!res?.isFinal && !res?.[0]) continue;
+        for (let a = 0; a < res.length; a++) {
+          const transcript = res[a]?.transcript as string | undefined;
+          if (!transcript) continue;
+          // eslint-disable-next-line no-console
+          console.log("[voice] heard:", transcript);
+          const nav: NavFn = (path) => {
+            navigate({ to: path as any });
+          };
+          if (matchCommand(transcript, nav, speak)) return;
+        }
+      }
     };
     recognitionRef.current = rec;
     try {
       rec.start();
-    } catch {
-      /* noop */
+    } catch (e) {
+      console.warn("[voice] start failed", e);
     }
     return () => {
-      try {
-        rec.stop();
-      } catch {
-        /* noop */
-      }
+      try { rec.stop(); } catch { /* noop */ }
       recognitionRef.current = null;
       setListening(false);
     };
-  }, [voiceCommandsOn, speak]);
+  }, [voiceCommandsOn, speak, navigate]);
 
   const value = useMemo<NarrationState>(
     () => ({

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Accessibility, Volume2, VolumeX, Mic, MicOff, X, Square } from "lucide-react";
 import { useNarration } from "@/context/NarrationContext";
 
 export function AccessibilityFab() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const [open, setOpen] = useState(false);
   const {
     narrationOn,
@@ -14,6 +16,8 @@ export function AccessibilityFab() {
     toggleVoiceCommands,
     stop,
   } = useNarration();
+
+  if (!mounted) return null;
 
   return (
     <div data-a11y-fab className="fixed bottom-4 right-4 z-[90] flex flex-col items-end gap-2">
