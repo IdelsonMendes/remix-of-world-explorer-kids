@@ -69,24 +69,22 @@ function LobbyPage() {
     setTourOpen(false);
   };
 
+  // Redirect to /login when there's no session, or when session exists but
+  // profile is incomplete (e.g. fresh Google sign-in needing name/avatar).
+  // MUST live in useEffect — calling navigate() during render causes an
+  // infinite re-render/navigation loop.
+  useEffect(() => {
+    if (isLoggedIn) return;
+    if (profileLoading) return;
+    navigate({ to: "/login" });
+  }, [isLoggedIn, profileLoading, navigate]);
 
   if (!isLoggedIn) {
-    if (profileLoading || !session) {
-      // Either still loading profile, or really logged out
-      if (!session && typeof window !== "undefined") {
-        navigate({ to: "/login" });
-      }
-      return (
-        <div className="min-h-screen grid place-items-center">
-          <div className="text-foreground/60 font-bold">Carregando...</div>
-        </div>
-      );
-    }
-    // Session exists but no profile name → finish setup
-    if (typeof window !== "undefined") {
-      navigate({ to: "/login" });
-    }
-    return null;
+    return (
+      <div className="min-h-screen grid place-items-center">
+        <div className="text-foreground/60 font-bold">Carregando...</div>
+      </div>
+    );
   }
 
   const totalCountries = COUNTRY_LIST.length;
