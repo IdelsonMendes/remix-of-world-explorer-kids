@@ -17,6 +17,8 @@ export function AccessibilityFab() {
     stop,
   } = useNarration();
 
+  if (!mounted) return null;
+
   return (
     <div data-a11y-fab className="fixed bottom-4 right-4 z-[90] flex flex-col items-end gap-2">
       <AnimatePresence>
