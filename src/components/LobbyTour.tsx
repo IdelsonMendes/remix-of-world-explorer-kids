@@ -36,9 +36,9 @@ const STEPS: Step[] = [
   {
     id: "profile",
     target: "[data-tour='profile']",
-    emoji: "🧑‍🚀",
-    title: "Seu perfil",
-    lines: ["Aqui ficam seu nome e sua foto.", "E também o seu progresso na plataforma!"],
+    emoji: "📈",
+    title: "Seu progresso",
+    lines: ["Aqui você vê o quanto já explorou!", "A cada aventura, a barrinha cresce mais!"],
   },
   {
     id: "account",
