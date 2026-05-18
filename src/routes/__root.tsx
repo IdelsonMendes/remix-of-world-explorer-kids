@@ -2,6 +2,8 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 
 import appCss from "../styles.css?url";
 import { PassportProvider } from "@/context/PassportContext";
+import { NarrationProvider } from "@/context/NarrationContext";
+import { AccessibilityFab } from "@/components/AccessibilityFab";
 
 function NotFoundComponent() {
   return (
