@@ -147,7 +147,6 @@ function LobbyPage() {
         >
           <div className="rounded-[2.35rem] bg-card p-7 sm:p-10 grid md:grid-cols-[auto_1fr_auto] gap-6 items-center">
             <motion.div
-              data-tour="profile"
               animate={{ rotate: [0, -5, 5, 0] }}
               transition={{ repeat: Infinity, duration: 4 }}
               className="h-24 w-24 sm:h-28 sm:w-28 rounded-3xl bg-gradient-sunset grid place-items-center overflow-hidden shadow-float"
@@ -165,7 +164,7 @@ function LobbyPage() {
                 Pronto para mais uma aventura? Escolha um país, uma brincadeira ou
                 continue de onde parou.
               </p>
-              <div className="mt-4">
+              <div data-tour="profile" className="mt-4 rounded-2xl p-2 -m-2">
                 <div className="flex items-center justify-between text-xs font-bold mb-1">
                   <span>Progresso geral</span>
                   <span>{overallPct}%</span>

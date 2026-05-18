@@ -2,6 +2,8 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 
 import appCss from "../styles.css?url";
 import { PassportProvider } from "@/context/PassportContext";
+import { NarrationProvider } from "@/context/NarrationContext";
+import { AccessibilityFab } from "@/components/AccessibilityFab";
 
 function NotFoundComponent() {
   return (
@@ -71,7 +73,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   return (
     <PassportProvider>
-      <Outlet />
+      <NarrationProvider>
+        <Outlet />
+        <AccessibilityFab />
+      </NarrationProvider>
     </PassportProvider>
   );
 }
