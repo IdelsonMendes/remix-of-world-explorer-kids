@@ -73,7 +73,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   return (
     <PassportProvider>
-      <Outlet />
+      <NarrationProvider>
+        <Outlet />
+        <AccessibilityFab />
+      </NarrationProvider>
     </PassportProvider>
   );
 }
