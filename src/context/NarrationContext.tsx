@@ -131,12 +131,15 @@ function matchCommand(transcript: string, nav: NavFn, speak: (s: string) => void
 }
 
 export function NarrationProvider({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();
   const [narrationOn, setNarrationOn] = useState<boolean>(() => loadBool(STORAGE_NARRATION));
   const [voiceCommandsOn, setVoiceCommandsOn] = useState<boolean>(() => loadBool(STORAGE_VOICE));
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const recognitionRef = useRef<any>(null);
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
+  const voiceCmdRef = useRef(voiceCommandsOn);
+  useEffect(() => { voiceCmdRef.current = voiceCommandsOn; }, [voiceCommandsOn]);
 
   // Pick a Portuguese voice when available
   useEffect(() => {
