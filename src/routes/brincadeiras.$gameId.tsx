@@ -1,10 +1,11 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { useEffect } from "react";
 import { MINI_GAMES, type MiniGameId } from "@/data/miniGames";
 import { MemoryGame } from "@/components/games/MemoryGame";
 import { ChoiceQuiz } from "@/components/games/ChoiceQuiz";
 import { SpotDifferencesGame } from "@/components/games/SpotDifferencesGame";
 import { usePassport } from "@/context/PassportContext";
+import { SmartBackLink } from "@/components/SmartBackLink";
 
 const VALID: MiniGameId[] = ["memoria", "bandeiras", "safari", "sons", "monumentos", "seteerros"];
 
