@@ -50,11 +50,22 @@ export const Route = createFileRoute("/brincadeiras/$gameId")({
 function GamePage() {
   const { gameId } = Route.useParams();
   const navigate = useNavigate();
-  const { isLoggedIn } = usePassport();
+  const { isLoggedIn, profileLoading } = usePassport();
+
+  // Redirect unauthenticated users from a useEffect — calling navigate()
+  // during render triggers an infinite navigation loop.
+  useEffect(() => {
+    if (isLoggedIn) return;
+    if (profileLoading) return;
+    navigate({ to: "/login" });
+  }, [isLoggedIn, profileLoading, navigate]);
 
   if (!isLoggedIn) {
-    if (typeof window !== "undefined") navigate({ to: "/login" });
-    return null;
+    return (
+      <div className="min-h-screen grid place-items-center">
+        <div className="text-foreground/60 font-bold">Carregando...</div>
+      </div>
+    );
   }
 
   const meta = MINI_GAMES.find((g) => g.id === gameId)!;
@@ -63,12 +74,7 @@ function GamePage() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 backdrop-blur-md bg-background/80 border-b border-border/60">
         <div className="mx-auto max-w-5xl flex items-center justify-between px-4 sm:px-6 py-3">
-          <Link
-            to="/lobby"
-            className="inline-flex items-center gap-2 text-sm font-bold text-foreground/70 hover:text-primary transition"
-          >
-            <ArrowLeft className="h-4 w-4" /> Voltar ao lobby
-          </Link>
+          <SmartBackLink fallbackTo="/lobby" label="Voltar" />
           <span className="text-sm font-bold">{meta.emoji} {meta.title}</span>
         </div>
       </header>
