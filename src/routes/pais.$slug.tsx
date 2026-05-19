@@ -58,7 +58,7 @@ export const Route = createFileRoute("/pais/$slug")({
   },
 });
 
-type Tab = "historia" | "bandeira" | "curiosidades";
+type Tab = "historia" | "bandeira" | "curiosidades" | "infantil" | "brincadeira";
 
 function CountryPage() {
   const { slug } = Route.useParams();
