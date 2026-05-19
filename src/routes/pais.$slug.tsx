@@ -1,12 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy } from "lucide-react";
+import { BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy } from "lucide-react";
 import { COUNTRIES } from "@/data/countries";
 import type { CountrySlug } from "@/context/PassportContext";
 import { usePassport } from "@/context/PassportContext";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SmartBackLink } from "@/components/SmartBackLink";
 
 const VALID_SLUGS = Object.keys(COUNTRIES) as CountrySlug[];
 
