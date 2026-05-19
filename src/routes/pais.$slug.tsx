@@ -1,10 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy } from "lucide-react";
+import { BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy, Sparkles, Volume2, VolumeX, PartyPopper } from "lucide-react";
 import { COUNTRIES } from "@/data/countries";
+import { COUNTRY_EXTRAS } from "@/data/countryExtras";
 import type { CountrySlug } from "@/context/PassportContext";
 import { usePassport } from "@/context/PassportContext";
+import { useNarration } from "@/context/NarrationContext";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SmartBackLink } from "@/components/SmartBackLink";
@@ -56,7 +58,7 @@ export const Route = createFileRoute("/pais/$slug")({
   },
 });
 
-type Tab = "historia" | "bandeira" | "curiosidades";
+type Tab = "historia" | "bandeira" | "curiosidades" | "infantil" | "brincadeira";
 
 function CountryPage() {
   const { slug } = Route.useParams();
@@ -131,6 +133,12 @@ function CountryPage() {
           <TabButton active={tab === "historia"} onClick={() => setTab("historia")}>
             <BookOpen className="h-4 w-4" /> História
           </TabButton>
+          <TabButton active={tab === "infantil"} onClick={() => setTab("infantil")}>
+            <Sparkles className="h-4 w-4" /> Histórias Infantis
+          </TabButton>
+          <TabButton active={tab === "brincadeira"} onClick={() => setTab("brincadeira")}>
+            <PartyPopper className="h-4 w-4" /> Brincadeiras Locais
+          </TabButton>
           <TabButton active={tab === "bandeira"} onClick={() => setTab("bandeira")}>
             <Gamepad2 className="h-4 w-4" /> Quiz da Bandeira
           </TabButton>
@@ -145,6 +153,20 @@ function CountryPage() {
               paragraphs={country.story}
               done={storyRead[country.slug]}
               onFinish={() => markStoryRead(country.slug)}
+            />
+          )}
+          {tab === "infantil" && (
+            <ChildStorySection
+              countryName={country.name}
+              color={country.color}
+              extras={COUNTRY_EXTRAS[country.slug]}
+            />
+          )}
+          {tab === "brincadeira" && (
+            <LocalGameSection
+              countryName={country.name}
+              color={country.color}
+              extras={COUNTRY_EXTRAS[country.slug]}
             />
           )}
           {tab === "bandeira" && (
@@ -164,6 +186,7 @@ function CountryPage() {
             />
           )}
         </div>
+
 
         {/* Combined games tracker */}
         <GamesTracker
@@ -424,4 +447,233 @@ function GamesTracker({
   }, [bothDone, onAllDone]);
 
   return null;
+}
+
+// ============= Histórias Infantis =============
+
+function ChildStorySection({
+  countryName,
+  color,
+  extras,
+}: {
+  countryName: string;
+  color: string;
+  extras: (typeof COUNTRY_EXTRAS)[CountrySlug];
+}) {
+  const { speak, stop, speaking } = useNarration();
+  const story = extras.childStory;
+
+  const fullText = useMemo(
+    () =>
+      `Luna apresenta: ${story.title}. ${story.paragraphs.join(" ")} ${
+        story.moral ? `Moral da história: ${story.moral}` : ""
+      }`,
+    [story],
+  );
+
+  useEffect(() => () => stop(), [stop]);
+
+  return (
+    <div className="rounded-3xl bg-card p-6 sm:p-8 border-2 border-border/40 shadow-soft">
+      <div
+        className="rounded-2xl p-5 mb-5 flex items-start gap-3"
+        style={{ background: `color-mix(in oklab, ${color} 25%, white)` }}
+      >
+        <div className="text-3xl">🌟</div>
+        <p className="text-base sm:text-lg font-semibold text-foreground/85">
+          <strong>Luna Matias diz:</strong> “Vamos viajar com a imaginação por uma história de {countryName}? Senta aqui pertinho e escuta!”
+        </p>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="text-6xl">{story.emoji}</div>
+        <div className="flex-1 min-w-[180px]">
+          <h2 className="text-2xl sm:text-3xl font-display font-bold flex items-center gap-2">
+            <Sparkles className="h-6 w-6 text-primary" /> {story.title}
+          </h2>
+        </div>
+        <button
+          onClick={() => (speaking ? stop() : speak(fullText))}
+          aria-label={speaking ? "Parar narração" : "Ouvir história"}
+          className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
+        >
+          {speaking ? (
+            <>
+              <VolumeX className="h-5 w-5" /> Parar
+            </>
+          ) : (
+            <>
+              <Volume2 className="h-5 w-5" /> Ouvir História
+            </>
+          )}
+        </button>
+      </div>
+
+      <div className="mt-6 space-y-5 text-lg sm:text-xl leading-relaxed text-foreground/85">
+        {story.paragraphs.map((p, i) => (
+          <p key={i}>
+            <span className="mr-2 text-2xl align-middle">{["📖", "✨", "🌈", "💫"][i % 4]}</span>
+            {p}
+          </p>
+        ))}
+      </div>
+
+      {story.moral && (
+        <div className="mt-6 rounded-2xl border-2 border-dashed border-primary/40 bg-primary/5 p-5">
+          <div className="text-sm font-bold uppercase tracking-wider text-primary">
+            ✨ Moral da história
+          </div>
+          <p className="mt-1 text-lg font-semibold">{story.moral}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============= Brincadeiras Locais =============
+
+function LocalGameSection({
+  countryName,
+  color,
+  extras,
+}: {
+  countryName: string;
+  color: string;
+  extras: (typeof COUNTRY_EXTRAS)[CountrySlug];
+}) {
+  const { speak, stop, speaking } = useNarration();
+  const game = extras.localGame;
+  const [taps, setTaps] = useState(0);
+  const [won, setWon] = useState(false);
+
+  const intro = useMemo(
+    () =>
+      `Brincadeira de ${countryName}: ${game.name}. ${game.description}. Regras: ${game.rules.join(" ")}`,
+    [countryName, game],
+  );
+
+  useEffect(() => () => stop(), [stop]);
+
+  const handleTap = () => {
+    if (won) return;
+    const next = taps + 1;
+    setTaps(next);
+    if (next >= game.interaction.goal) {
+      setWon(true);
+      speak(`Parabéns! Você completou ${game.name}!`);
+    }
+  };
+
+  const reset = () => {
+    setTaps(0);
+    setWon(false);
+  };
+
+  const pct = Math.min(100, (taps / game.interaction.goal) * 100);
+
+  return (
+    <div className="rounded-3xl bg-card p-6 sm:p-8 border-2 border-border/40 shadow-soft">
+      <div
+        className="rounded-2xl p-5 mb-5 flex items-start gap-3"
+        style={{ background: `color-mix(in oklab, ${color} 25%, white)` }}
+      >
+        <div className="text-3xl">🎉</div>
+        <p className="text-base sm:text-lg font-semibold text-foreground/85">
+          <strong>Luna Matias diz:</strong> “As crianças de {countryName} amam essa brincadeira! Vem aprender comigo e tente jogar aqui também!”
+        </p>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="text-6xl">{game.emoji}</div>
+        <div className="flex-1 min-w-[180px]">
+          <h2 className="text-2xl sm:text-3xl font-display font-bold flex items-center gap-2">
+            <PartyPopper className="h-6 w-6 text-primary" /> {game.name}
+          </h2>
+          <p className="mt-1 text-foreground/70">{game.description}</p>
+        </div>
+        <button
+          onClick={() => (speaking ? stop() : speak(intro))}
+          aria-label={speaking ? "Parar narração" : "Ouvir regras"}
+          className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
+        >
+          {speaking ? (
+            <>
+              <VolumeX className="h-5 w-5" /> Parar
+            </>
+          ) : (
+            <>
+              <Volume2 className="h-5 w-5" /> Ouvir Regras
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Regras */}
+      <div className="mt-6 rounded-2xl bg-muted/40 p-5 border-2 border-border/40">
+        <h3 className="font-display font-bold text-lg flex items-center gap-2">
+          📋 Como brincar
+        </h3>
+        <ol className="mt-3 space-y-2">
+          {game.rules.map((r, i) => (
+            <li key={i} className="flex gap-3 text-base sm:text-lg">
+              <span
+                className="flex-shrink-0 w-7 h-7 rounded-full bg-primary text-primary-foreground font-bold grid place-items-center text-sm"
+                aria-hidden
+              >
+                {i + 1}
+              </span>
+              <span className="text-foreground/85">{r}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {/* Mini-jogo interativo */}
+      <div className="mt-6 rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-transparent p-5 sm:p-6">
+        <h3 className="font-display font-bold text-lg flex items-center gap-2">
+          🎮 Jogue agora! <span className="text-sm font-normal text-foreground/60">— {game.interaction.prompt}</span>
+        </h3>
+
+        <div className="mt-4 h-3 rounded-full bg-muted overflow-hidden">
+          <motion.div
+            className="h-full bg-gradient-sunset"
+            animate={{ width: `${pct}%` }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          />
+        </div>
+        <p className="mt-2 text-sm font-bold text-foreground/70">
+          {taps} / {game.interaction.goal}
+        </p>
+
+        <div className="mt-5 grid place-items-center min-h-[180px]">
+          {won ? (
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="text-center"
+            >
+              <div className="text-6xl mb-2">🏆</div>
+              <p className="text-xl font-display font-bold">Parabéns! Você jogou {game.name}!</p>
+              <button
+                onClick={reset}
+                className="mt-4 inline-flex rounded-full bg-card border-2 border-border px-5 py-2 font-bold text-sm hover:border-primary/40"
+              >
+                Jogar de novo
+              </button>
+            </motion.div>
+          ) : (
+            <motion.button
+              onClick={handleTap}
+              whileTap={{ scale: 0.85, rotate: -8 }}
+              aria-label={game.interaction.prompt}
+              className="text-7xl sm:text-8xl drop-shadow-lg hover:scale-110 active:scale-95 transition select-none cursor-pointer rounded-full p-4"
+              style={{ background: `color-mix(in oklab, ${color} 30%, transparent)` }}
+            >
+              {game.interaction.target}
+            </motion.button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
