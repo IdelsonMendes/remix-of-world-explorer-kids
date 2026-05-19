@@ -133,6 +133,12 @@ function CountryPage() {
           <TabButton active={tab === "historia"} onClick={() => setTab("historia")}>
             <BookOpen className="h-4 w-4" /> História
           </TabButton>
+          <TabButton active={tab === "infantil"} onClick={() => setTab("infantil")}>
+            <Sparkles className="h-4 w-4" /> Histórias Infantis
+          </TabButton>
+          <TabButton active={tab === "brincadeira"} onClick={() => setTab("brincadeira")}>
+            <PartyPopper className="h-4 w-4" /> Brincadeiras Locais
+          </TabButton>
           <TabButton active={tab === "bandeira"} onClick={() => setTab("bandeira")}>
             <Gamepad2 className="h-4 w-4" /> Quiz da Bandeira
           </TabButton>
@@ -147,6 +153,20 @@ function CountryPage() {
               paragraphs={country.story}
               done={storyRead[country.slug]}
               onFinish={() => markStoryRead(country.slug)}
+            />
+          )}
+          {tab === "infantil" && (
+            <ChildStorySection
+              countryName={country.name}
+              color={country.color}
+              extras={COUNTRY_EXTRAS[country.slug]}
+            />
+          )}
+          {tab === "brincadeira" && (
+            <LocalGameSection
+              countryName={country.name}
+              color={country.color}
+              extras={COUNTRY_EXTRAS[country.slug]}
             />
           )}
           {tab === "bandeira" && (
@@ -166,6 +186,7 @@ function CountryPage() {
             />
           )}
         </div>
+
 
         {/* Combined games tracker */}
         <GamesTracker
