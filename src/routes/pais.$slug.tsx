@@ -90,21 +90,10 @@ function CountryPage() {
     <div className="min-h-screen">
       <SiteHeader />
       <main className="mx-auto max-w-5xl px-4 sm:px-6 py-10">
-        {isLoggedIn ? (
-          <Link
-            to="/lobby"
-            className="inline-flex items-center gap-2 text-sm font-bold text-foreground/70 hover:text-primary transition"
-          >
-            <ArrowLeft className="h-4 w-4" /> Voltar ao lobby
-          </Link>
-        ) : (
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm font-bold text-foreground/70 hover:text-primary transition"
-          >
-            <ArrowLeft className="h-4 w-4" /> Voltar ao mapa
-          </Link>
-        )}
+        <SmartBackLink
+          fallbackTo={isLoggedIn ? "/lobby" : "/"}
+          label={isLoggedIn ? "Voltar" : "Voltar ao mapa"}
+        />
 
         {/* Header card */}
         <div
