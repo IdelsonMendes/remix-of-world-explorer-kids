@@ -1,10 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy } from "lucide-react";
+import { BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy, Sparkles, Volume2, VolumeX, PartyPopper } from "lucide-react";
 import { COUNTRIES } from "@/data/countries";
+import { COUNTRY_EXTRAS } from "@/data/countryExtras";
 import type { CountrySlug } from "@/context/PassportContext";
 import { usePassport } from "@/context/PassportContext";
+import { useNarration } from "@/context/NarrationContext";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SmartBackLink } from "@/components/SmartBackLink";
