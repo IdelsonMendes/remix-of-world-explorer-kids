@@ -11,6 +11,7 @@ import { useNarration } from "@/context/NarrationContext";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SmartBackLink } from "@/components/SmartBackLink";
+import { useSfx } from "@/hooks/useSfx";
 
 const VALID_SLUGS = Object.keys(COUNTRIES) as CountrySlug[];
 
