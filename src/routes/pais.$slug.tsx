@@ -173,6 +173,9 @@ function CountryPage() {
               extras={COUNTRY_EXTRAS[country.slug]}
             />
           )}
+          {tab === "videos" && (
+            <AdventureVideos countryName={country.name} color={country.color} />
+          )}
           {tab === "bandeira" && (
             <QuizGame
               key={`flag-${country.slug}`}
