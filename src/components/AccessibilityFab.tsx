@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Accessibility, Volume2, VolumeX, Mic, MicOff, X, Square } from "lucide-react";
+import { Accessibility, Volume2, VolumeX, Mic, MicOff, X, Square, Music, Music2 } from "lucide-react";
 import { useNarration } from "@/context/NarrationContext";
+import { getSfxEnabled, setSfxEnabled, useSfx } from "@/hooks/useSfx";
 
 export function AccessibilityFab() {
   const [mounted, setMounted] = useState(false);
