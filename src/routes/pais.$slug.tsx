@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy, Sparkles, Volume2, VolumeX, PartyPopper } from "lucide-react";
+import { BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy, Sparkles, Volume2, VolumeX, PartyPopper, Video as VideoIcon } from "lucide-react";
+import { AdventureVideos } from "@/components/AdventureVideos";
 import { COUNTRIES } from "@/data/countries";
 import { COUNTRY_EXTRAS } from "@/data/countryExtras";
 import type { CountrySlug } from "@/context/PassportContext";
@@ -58,7 +59,7 @@ export const Route = createFileRoute("/pais/$slug")({
   },
 });
 
-type Tab = "historia" | "bandeira" | "curiosidades" | "infantil" | "brincadeira";
+type Tab = "historia" | "bandeira" | "curiosidades" | "infantil" | "brincadeira" | "videos";
 
 function CountryPage() {
   const { slug } = Route.useParams();
@@ -139,6 +140,9 @@ function CountryPage() {
           <TabButton active={tab === "brincadeira"} onClick={() => setTab("brincadeira")}>
             <PartyPopper className="h-4 w-4" /> Brincadeiras Locais
           </TabButton>
+          <TabButton active={tab === "videos"} onClick={() => setTab("videos")}>
+            <VideoIcon className="h-4 w-4" /> Vídeos da Aventura
+          </TabButton>
           <TabButton active={tab === "bandeira"} onClick={() => setTab("bandeira")}>
             <Gamepad2 className="h-4 w-4" /> Quiz da Bandeira
           </TabButton>
@@ -168,6 +172,9 @@ function CountryPage() {
               color={country.color}
               extras={COUNTRY_EXTRAS[country.slug]}
             />
+          )}
+          {tab === "videos" && (
+            <AdventureVideos countryName={country.name} color={country.color} />
           )}
           {tab === "bandeira" && (
             <QuizGame
