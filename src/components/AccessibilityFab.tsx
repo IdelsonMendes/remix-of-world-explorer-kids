@@ -6,7 +6,12 @@ import { getSfxEnabled, setSfxEnabled, useSfx } from "@/hooks/useSfx";
 
 export function AccessibilityFab() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const [sfxOn, setSfxOnState] = useState(true);
+  const { play } = useSfx();
+  useEffect(() => {
+    setMounted(true);
+    setSfxOnState(getSfxEnabled());
+  }, []);
   const [open, setOpen] = useState(false);
   const {
     narrationOn,
@@ -17,6 +22,13 @@ export function AccessibilityFab() {
     toggleVoiceCommands,
     stop,
   } = useNarration();
+
+  const toggleSfx = () => {
+    const next = !sfxOn;
+    setSfxEnabled(next);
+    setSfxOnState(next);
+    if (next) play("success");
+  };
 
   if (!mounted) return null;
 
