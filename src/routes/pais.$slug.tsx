@@ -140,6 +140,9 @@ function CountryPage() {
           <TabButton active={tab === "brincadeira"} onClick={() => setTab("brincadeira")}>
             <PartyPopper className="h-4 w-4" /> Brincadeiras Locais
           </TabButton>
+          <TabButton active={tab === "videos"} onClick={() => setTab("videos")}>
+            <VideoIcon className="h-4 w-4" /> Vídeos da Aventura
+          </TabButton>
           <TabButton active={tab === "bandeira"} onClick={() => setTab("bandeira")}>
             <Gamepad2 className="h-4 w-4" /> Quiz da Bandeira
           </TabButton>
