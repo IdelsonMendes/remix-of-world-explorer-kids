@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Accessibility, Volume2, VolumeX, Mic, MicOff, X, Square } from "lucide-react";
+import { Accessibility, Volume2, VolumeX, Mic, MicOff, X, Square, Music, Music2 } from "lucide-react";
 import { useNarration } from "@/context/NarrationContext";
+import { getSfxEnabled, setSfxEnabled, useSfx } from "@/hooks/useSfx";
 
 export function AccessibilityFab() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const [sfxOn, setSfxOnState] = useState(true);
+  const { play } = useSfx();
+  useEffect(() => {
+    setMounted(true);
+    setSfxOnState(getSfxEnabled());
+  }, []);
   const [open, setOpen] = useState(false);
   const {
     narrationOn,
@@ -16,6 +22,13 @@ export function AccessibilityFab() {
     toggleVoiceCommands,
     stop,
   } = useNarration();
+
+  const toggleSfx = () => {
+    const next = !sfxOn;
+    setSfxEnabled(next);
+    setSfxOnState(next);
+    if (next) play("success");
+  };
 
   if (!mounted) return null;
 
@@ -95,6 +108,26 @@ export function AccessibilityFab() {
                       ? "Ouvindo… diga: mapa, brincadeiras, passaporte"
                       : "Ativado"
                     : "Desativado"}
+                </span>
+              </span>
+            </button>
+
+            <button
+              onClick={toggleSfx}
+              aria-pressed={sfxOn}
+              className={`w-full flex items-center gap-3 rounded-2xl border-2 p-3 text-left transition ${
+                sfxOn
+                  ? "bg-accent/30 border-accent"
+                  : "bg-muted/40 border-border hover:border-primary/40"
+              }`}
+            >
+              <span className="h-9 w-9 grid place-items-center rounded-xl bg-accent text-accent-foreground shadow-sticker shrink-0">
+                {sfxOn ? <Music className="h-4 w-4" /> : <Music2 className="h-4 w-4 opacity-50" />}
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block font-bold text-sm">Sons divertidos</span>
+                <span className="block text-[11px] text-foreground/60">
+                  {sfxOn ? "Ativados — feedback ao acertar" : "Desativados"}
                 </span>
               </span>
             </button>

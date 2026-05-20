@@ -11,6 +11,7 @@ import { useNarration } from "@/context/NarrationContext";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SmartBackLink } from "@/components/SmartBackLink";
+import { useSfx } from "@/hooks/useSfx";
 
 const VALID_SLUGS = Object.keys(COUNTRIES) as CountrySlug[];
 
@@ -77,6 +78,7 @@ function CountryPage() {
 
   const [tab, setTab] = useState<Tab>("historia");
   const [showStampToast, setShowStampToast] = useState(false);
+  const { play } = useSfx();
 
   const ready = storyRead[country.slug] && gamesDone[country.slug];
 
@@ -84,10 +86,11 @@ function CountryPage() {
     if (ready && !hasStamp(country.slug)) {
       addStamp(country.slug);
       setShowStampToast(true);
+      play("celebrate");
       const t = setTimeout(() => setShowStampToast(false), 4500);
       return () => clearTimeout(t);
     }
-  }, [ready, country.slug, hasStamp, addStamp]);
+  }, [ready, country.slug, hasStamp, addStamp, play]);
 
   return (
     <div className="min-h-screen">
@@ -331,14 +334,21 @@ function QuizGame({
   const [picked, setPicked] = useState<string | null>(null);
   const [score, setScore] = useState(savedProgress?.score ?? 0);
   const [done, setDone] = useState(savedProgress?.done ?? false);
+  const { play } = useSfx();
 
   const q = questions[idx];
 
   const handlePick = (opt: string) => {
     if (picked) return;
     setPicked(opt);
-    const nextScore = opt === q.answer ? score + 1 : score;
-    if (opt === q.answer) setScore((s) => s + 1);
+    const correct = opt === q.answer;
+    const nextScore = correct ? score + 1 : score;
+    if (correct) {
+      setScore((s) => s + 1);
+      play("success");
+    } else {
+      play("error");
+    }
     setTimeout(() => {
       if (idx + 1 < questions.length) {
         setIdx(idx + 1);
@@ -347,6 +357,7 @@ function QuizGame({
         quizProgress[quizKey] = { done: true, score: nextScore, total: questions.length };
         setScore(nextScore);
         setDone(true);
+        play("celebrate");
         window.dispatchEvent(new CustomEvent("quiz-progress-changed", { detail: quizKey }));
       }
     }, 900);

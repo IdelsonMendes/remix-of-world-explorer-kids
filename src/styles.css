@@ -122,11 +122,36 @@
     background-image:
       radial-gradient(circle at 20% 10%, oklch(0.86 0.17 95 / 0.18) 0%, transparent 40%),
       radial-gradient(circle at 90% 80%, oklch(0.78 0.15 220 / 0.2) 0%, transparent 45%);
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1, h2, h3, h4, h5 {
     font-family: var(--font-display);
     letter-spacing: -0.01em;
+  }
+
+  /* Focus visible: ring grosso e colorido para crianças usando teclado / leitor de tela */
+  *:focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: 12px;
+  }
+
+  /* Tap targets mínimos em mobile (WCAG 2.5.5) */
+  @media (pointer: coarse) {
+    button, [role="button"], a, input[type="checkbox"], input[type="radio"] {
+      min-height: 44px;
+    }
+  }
+
+  /* Respeita usuários sensíveis a movimento */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
