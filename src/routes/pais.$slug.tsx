@@ -78,6 +78,7 @@ function CountryPage() {
 
   const [tab, setTab] = useState<Tab>("historia");
   const [showStampToast, setShowStampToast] = useState(false);
+  const { play } = useSfx();
 
   const ready = storyRead[country.slug] && gamesDone[country.slug];
 
@@ -85,10 +86,11 @@ function CountryPage() {
     if (ready && !hasStamp(country.slug)) {
       addStamp(country.slug);
       setShowStampToast(true);
+      play("celebrate");
       const t = setTimeout(() => setShowStampToast(false), 4500);
       return () => clearTimeout(t);
     }
-  }, [ready, country.slug, hasStamp, addStamp]);
+  }, [ready, country.slug, hasStamp, addStamp, play]);
 
   return (
     <div className="min-h-screen">
