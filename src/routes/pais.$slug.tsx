@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy, Sparkles, Volume2, VolumeX, PartyPopper } from "lucide-react";
+import { BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy, Sparkles, Volume2, VolumeX, PartyPopper, Video as VideoIcon } from "lucide-react";
+import { AdventureVideos } from "@/components/AdventureVideos";
 import { COUNTRIES } from "@/data/countries";
 import { COUNTRY_EXTRAS } from "@/data/countryExtras";
 import type { CountrySlug } from "@/context/PassportContext";
