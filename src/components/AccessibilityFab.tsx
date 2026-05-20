@@ -112,6 +112,26 @@ export function AccessibilityFab() {
               </span>
             </button>
 
+            <button
+              onClick={toggleSfx}
+              aria-pressed={sfxOn}
+              className={`w-full flex items-center gap-3 rounded-2xl border-2 p-3 text-left transition ${
+                sfxOn
+                  ? "bg-accent/30 border-accent"
+                  : "bg-muted/40 border-border hover:border-primary/40"
+              }`}
+            >
+              <span className="h-9 w-9 grid place-items-center rounded-xl bg-accent text-accent-foreground shadow-sticker shrink-0">
+                {sfxOn ? <Music className="h-4 w-4" /> : <Music2 className="h-4 w-4 opacity-50" />}
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block font-bold text-sm">Sons divertidos</span>
+                <span className="block text-[11px] text-foreground/60">
+                  {sfxOn ? "Ativados — feedback ao acertar" : "Desativados"}
+                </span>
+              </span>
+            </button>
+
             {speaking && (
               <button
                 onClick={stop}
