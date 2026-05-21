@@ -19,7 +19,8 @@ export const Route = createFileRoute("/conta")({
 
 function AccountPage() {
   const navigate = useNavigate();
-  const { session, isLoggedIn, explorerName, avatar, setProfile, logout } = usePassport();
+  const { session, isLoggedIn, explorerName, avatar, setProfile, logout, loading, profileLoading } =
+    usePassport();
   const deleteAccount = useServerFn(deleteMyAccount);
 
   const [name, setName] = useState(explorerName);
@@ -32,11 +33,13 @@ function AccountPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
 
+  // Only redirect AFTER auth bootstrap finishes — otherwise we redirect to
+  // /login during the initial render (session is null briefly), which then
+  // bounces the user back to /lobby and looks like a random reload.
   useEffect(() => {
-    if (!session && typeof window !== "undefined") {
-      navigate({ to: "/login" });
-    }
-  }, [session, navigate]);
+    if (loading || profileLoading) return;
+    if (!session) navigate({ to: "/login" });
+  }, [loading, profileLoading, session, navigate]);
 
   useEffect(() => {
     setName(explorerName);
@@ -44,7 +47,13 @@ function AccountPage() {
     setEmail(session?.user.email ?? "");
   }, [explorerName, avatar, session?.user.email]);
 
-  if (!session) return null;
+  if (loading || !session) {
+    return (
+      <div className="min-h-screen grid place-items-center">
+        <div className="text-foreground/60 font-bold">Carregando...</div>
+      </div>
+    );
+  }
 
   const flash = (kind: "ok" | "err", text: string) => {
     setMsg({ kind, text });
@@ -270,7 +279,7 @@ function AccountPage() {
           <button
             onClick={() => {
               clearTourSeen(session.user.id);
-              window.location.href = "/lobby?tour=1";
+              navigate({ to: "/lobby", search: { tour: "1" } as never });
             }}
             className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
           >

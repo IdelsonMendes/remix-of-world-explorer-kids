@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
@@ -71,10 +72,25 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RouteLoadingBar() {
-  const isLoading = useRouterState({
-    select: (s) => s.status === "pending" || s.isLoading,
-  });
-  if (!isLoading) return null;
+  const isPending = useRouterState({ select: (s) => s.status === "pending" });
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (!isPending) {
+      setVisible(false);
+      return;
+    }
+    // Only show after a brief delay so instant navigations don't flash the bar.
+    const show = window.setTimeout(() => setVisible(true), 180);
+    // Safety net: never let the bar live longer than 6s, no matter what.
+    const hide = window.setTimeout(() => setVisible(false), 6000);
+    return () => {
+      window.clearTimeout(show);
+      window.clearTimeout(hide);
+    };
+  }, [isPending]);
+
+  if (!visible) return null;
   return (
     <div
       role="status"
