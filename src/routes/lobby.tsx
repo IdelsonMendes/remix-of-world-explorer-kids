@@ -82,7 +82,7 @@ function LobbyPage() {
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen grid place-items-center">
-        <div className="text-foreground/60 font-bold">Carregando...</div>
+        <div className="text-foreground/60 font-bold">Preparando sua aventura… 🚀</div>
       </div>
     );
   }
@@ -110,7 +110,7 @@ function LobbyPage() {
               <ChevronDown className="h-4 w-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-52">
-              <DropdownMenuLabel>Olá, {explorerName}!</DropdownMenuLabel>
+              <DropdownMenuLabel>Oi, {explorerName}! 👋</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link to="/conta" className="cursor-pointer">
@@ -121,7 +121,7 @@ function LobbyPage() {
                 onClick={() => setTourOpen(true)}
                 className="cursor-pointer"
               >
-                <HelpCircle className="h-4 w-4 mr-2" /> Repetir tutorial
+                <HelpCircle className="h-4 w-4 mr-2" /> Ver a apresentação da Luna
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -155,18 +155,18 @@ function LobbyPage() {
             </motion.div>
             <div>
               <span className="inline-flex items-center gap-1 rounded-full bg-accent/60 px-3 py-1 text-xs font-bold uppercase tracking-wider">
-                <Sparkles className="h-3 w-3" /> Bem-vindo de volta
+                <Sparkles className="h-3 w-3" /> Que bom te ver de volta
               </span>
               <h1 className="mt-2 text-3xl sm:text-4xl font-display font-bold">
-                Olá, {explorerName}! 🌟
+                Oi, {explorerName}! 🌟
               </h1>
               <p className="mt-2 text-foreground/70">
-                Pronto para mais uma aventura? Escolha um país, uma brincadeira ou
-                continue de onde parou.
+                Pronto para mais uma aventura? Escolha um país no mapa ou pule
+                direto para uma brincadeira.
               </p>
               <div data-tour="profile" className="mt-4 rounded-2xl p-2 -m-2">
                 <div className="flex items-center justify-between text-xs font-bold mb-1">
-                  <span>Progresso geral</span>
+                  <span>Sua aventura até aqui</span>
                   <span>{overallPct}%</span>
                 </div>
                 <Progress value={overallPct} className="h-3" />
@@ -238,12 +238,12 @@ function LobbyPage() {
             {collected === totalCountries && (
               <div className="mt-5 rounded-2xl bg-gradient-sunset text-white p-4 text-center shadow-sticker">
                 <Award className="inline h-5 w-5 mr-1" />
-                <strong>Mestre Explorador! 🌍✨</strong>
+                <strong>Você é Mestre Explorador! 🌍✨</strong>
               </div>
             )}
             {collected > 0 && collected < totalCountries && (
               <p className="mt-4 text-xs text-foreground/60">
-                Visitados: {stamps.map((s) => COUNTRIES[s.country].name).join(", ")}
+                Já visitou: {stamps.map((s) => COUNTRIES[s.country].name).join(", ")}
               </p>
             )}
           </div>
@@ -254,7 +254,7 @@ function LobbyPage() {
               <h2 className="text-xl font-display font-bold flex items-center gap-2">
                 <Map className="h-5 w-5 text-primary" /> Mapa de descoberta
               </h2>
-              <span className="text-xs text-foreground/60">Toque em um país para explorar</span>
+              <span className="text-xs text-foreground/60">Toque num país para explorar</span>
             </div>
             <LobbyMap />
           </div>
@@ -268,7 +268,7 @@ function LobbyPage() {
                 Brincadeiras 🎲
               </h2>
               <p className="text-foreground/70">
-                Escolha uma atividade e teste o que aprendeu sobre o mundo.
+                Escolha uma brincadeira e mostre o que já aprendeu sobre o mundo!
               </p>
             </div>
           </div>
@@ -306,11 +306,11 @@ function LobbyPage() {
                             </span>
                           ) : (
                             <span className="text-xs font-bold rounded-full bg-muted px-3 py-1 text-foreground/60">
-                              Novo
+                              Novidade!
                             </span>
                           )}
                           <span className="text-sm font-bold text-primary group-hover:translate-x-1 transition">
-                            Jogar →
+                            Brincar →
                           </span>
                         </div>
                       </div>

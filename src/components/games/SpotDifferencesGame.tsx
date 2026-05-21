@@ -120,7 +120,7 @@ export function SpotDifferencesGame() {
 
       <p className="mt-3 text-sm text-foreground/70">
         Compare as duas imagens e toque, na imagem da <strong>direita</strong>,
-        nos <strong>{totalDiffs} elementos diferentes</strong>!
+        nos <strong>{totalDiffs} detalhes diferentes</strong>!
       </p>
 
       <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -224,7 +224,7 @@ export function SpotDifferencesGame() {
         <div className="mt-6 rounded-2xl bg-gradient-sunset text-white p-5 text-center shadow-sticker">
           <Trophy className="inline h-5 w-5 mr-1" />
           <strong>
-            Encontrou todas! 🎉 ({mistakes} {mistakes === 1 ? "erro" : "erros"})
+            Boa! Você encontrou tudo! 🎉 ({mistakes} {mistakes === 1 ? "tentativa errada" : "tentativas erradas"})
           </strong>
         </div>
       )}

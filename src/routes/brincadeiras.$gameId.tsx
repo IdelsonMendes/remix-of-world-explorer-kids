@@ -19,6 +19,7 @@ export const Route = createFileRoute("/brincadeiras/$gameId")({
     <div className="min-h-screen grid place-items-center text-center p-6">
       <div>
         <h1 className="text-3xl font-display font-bold">Brincadeira não encontrada 🎲</h1>
+        <p className="mt-2 text-foreground/70">Vamos escolher outra no lobby?</p>
         <Link to="/lobby" className="mt-5 inline-flex rounded-full bg-primary text-primary-foreground px-5 py-3 font-bold">
           Voltar ao lobby
         </Link>
@@ -28,10 +29,10 @@ export const Route = createFileRoute("/brincadeiras/$gameId")({
   errorComponent: ({ error }) => (
     <div className="min-h-screen grid place-items-center text-center p-6">
       <div>
-        <h1 className="text-2xl font-bold">Algo deu errado 😢</h1>
+        <h1 className="text-2xl font-bold">Ops! Algo se perdeu na bagagem 😢</h1>
         <p className="mt-2 text-foreground/70">{error.message}</p>
         <Link to="/lobby" className="mt-5 inline-flex rounded-full bg-primary text-primary-foreground px-5 py-3 font-bold">
-          Voltar
+          Voltar ao lobby
         </Link>
       </div>
     </div>
@@ -63,7 +64,7 @@ function GamePage() {
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen grid place-items-center">
-        <div className="text-foreground/60 font-bold">Carregando...</div>
+        <div className="text-foreground/60 font-bold">Preparando a brincadeira… 🎲</div>
       </div>
     );
   }

@@ -24,8 +24,8 @@ export const Route = createFileRoute("/pais/$slug")({
   notFoundComponent: () => (
     <div className="min-h-screen grid place-items-center p-6 text-center">
       <div>
-        <h1 className="text-4xl font-display font-bold">País não encontrado 🧭</h1>
-        <p className="mt-2 text-foreground/70">Vamos voltar para o mapa?</p>
+        <h1 className="text-4xl font-display font-bold">Esse país não está no mapa 🧭</h1>
+        <p className="mt-2 text-foreground/70">Vamos voltar e escolher outro destino?</p>
         <Link
           to="/"
           className="mt-6 inline-flex rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold"
@@ -38,10 +38,10 @@ export const Route = createFileRoute("/pais/$slug")({
   errorComponent: ({ error }) => (
     <div className="min-h-screen grid place-items-center p-6 text-center">
       <div>
-        <h1 className="text-2xl font-bold">Algo deu errado 😢</h1>
+        <h1 className="text-2xl font-bold">Ops! Algo se perdeu na bagagem 😢</h1>
         <p className="mt-2 text-foreground/70">{error.message}</p>
         <Link to="/" className="mt-6 inline-flex rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold">
-          Voltar
+          Voltar ao início
         </Link>
       </div>
     </div>
@@ -120,7 +120,7 @@ function CountryPage() {
             {hasStamp(country.slug) && (
               <div className="rounded-2xl bg-card border-2 border-[var(--mint)] px-4 py-3 text-center shadow-sticker">
                 <StampIcon className="h-5 w-5 mx-auto text-[var(--mint)]" />
-                <div className="text-xs font-bold mt-1">Carimbado!</div>
+                <div className="text-xs font-bold mt-1">Carimbado! 🎉</div>
               </div>
             )}
           </div>
@@ -128,7 +128,7 @@ function CountryPage() {
           {/* Progress */}
           <div className="mt-6 grid sm:grid-cols-2 gap-3 text-sm">
             <ProgressPill done={storyRead[country.slug]} icon="📖" label="História lida" />
-            <ProgressPill done={gamesDone[country.slug]} icon="🎮" label="Jogos completos" />
+            <ProgressPill done={gamesDone[country.slug]} icon="🎮" label="Quizzes concluídos" />
           </div>
         </div>
 
@@ -216,10 +216,10 @@ function CountryPage() {
               <div className="text-3xl">{country.emoji}</div>
               <div>
                 <div className="font-display font-bold">
-                  Carimbo conquistado{explorerName ? `, ${explorerName}` : ""}! 🎉
+                  Você ganhou um novo carimbo no passaporte{explorerName ? `, ${explorerName}` : ""}! 🎉
                 </div>
                 <div className="text-sm opacity-90">
-                  {country.name} adicionado ao seu passaporte.
+                  {country.name} agora faz parte da sua aventura!
                 </div>
               </div>
             </motion.div>
@@ -245,7 +245,7 @@ function ProgressPill({ done, icon, label }: { done: boolean; icon: string; labe
       {done ? (
         <Check className="h-5 w-5 text-[var(--mint)]" />
       ) : (
-        <span className="text-xs text-foreground/50 font-bold">PENDENTE</span>
+        <span className="text-xs text-foreground/50 font-bold">A FAZER</span>
       )}
     </div>
   );
@@ -286,7 +286,7 @@ function StorySection({
   return (
     <div className="rounded-3xl bg-card p-6 sm:p-8 border-2 border-border/40 shadow-soft">
       <h2 className="text-2xl font-display font-bold flex items-center gap-2">
-        <BookOpen className="h-6 w-6 text-primary" /> História do país
+        <BookOpen className="h-6 w-6 text-primary" /> Conheça o país
       </h2>
       <div className="mt-4 space-y-5 text-lg sm:text-xl leading-relaxed text-foreground/85">
         {paragraphs.map((p, i) => (
@@ -302,7 +302,7 @@ function StorySection({
             : "bg-primary text-primary-foreground shadow-sticker hover:-translate-y-0.5"
         }`}
       >
-        {done ? "✓ História lida" : "Marcar como lida"}
+        {done ? "✓ Já li essa história" : "Já li! Marcar como lida"}
       </button>
     </div>
   );
@@ -380,13 +380,13 @@ function QuizGame({
           <div className="text-5xl">🎉</div>
           <h3 className="mt-3 text-2xl font-display font-bold">{title} concluído!</h3>
           <p className="mt-2 text-foreground/70">
-            Você acertou <strong>{finalScore}</strong> de <strong>{questions.length}</strong>.
+            Você acertou <strong>{finalScore}</strong> de <strong>{questions.length}</strong>. Mandou bem!
           </p>
           <button
             onClick={reset}
             className="mt-5 rounded-full bg-card border-2 border-border px-5 py-2 font-bold text-sm hover:border-primary/40"
           >
-            Jogar novamente
+            Jogar de novo
           </button>
         </div>
       </div>
@@ -431,7 +431,7 @@ function QuizGame({
         })}
       </div>
       <p className="mt-4 text-sm text-foreground/60">
-        Pontuação: <strong>{score}</strong>
+        Acertos: <strong>{score}</strong>
       </p>
     </div>
   );
@@ -499,7 +499,7 @@ function ChildStorySection({
       >
         <div className="text-3xl">🌟</div>
         <p className="text-base sm:text-lg font-semibold text-foreground/85">
-          <strong>Luna Matias diz:</strong> “Vamos viajar com a imaginação por uma história de {countryName}? Senta aqui pertinho e escuta!”
+          <strong>Luna Matias diz:</strong> “Bora viajar com a imaginação por uma história de {countryName}? Senta pertinho e escuta!”
         </p>
       </div>
 
@@ -512,7 +512,7 @@ function ChildStorySection({
         </div>
         <button
           onClick={() => (speaking ? stop() : speak(fullText))}
-          aria-label={speaking ? "Parar narração" : "Ouvir história"}
+          aria-label={speaking ? "Pedir para a Luna parar" : "Ouvir a história"}
           className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
         >
           {speaking ? (
@@ -521,7 +521,7 @@ function ChildStorySection({
             </>
           ) : (
             <>
-              <Volume2 className="h-5 w-5" /> Ouvir História
+              <Volume2 className="h-5 w-5" /> Ouvir a história
             </>
           )}
         </button>
@@ -578,7 +578,7 @@ function LocalGameSection({
     setTaps(next);
     if (next >= game.interaction.goal) {
       setWon(true);
-      speak(`Parabéns! Você completou ${game.name}!`);
+      speak(`Mandou bem! Você jogou ${game.name} igual as crianças daqui!`);
     }
   };
 
@@ -597,7 +597,7 @@ function LocalGameSection({
       >
         <div className="text-3xl">🎉</div>
         <p className="text-base sm:text-lg font-semibold text-foreground/85">
-          <strong>Luna Matias diz:</strong> “As crianças de {countryName} amam essa brincadeira! Vem aprender comigo e tente jogar aqui também!”
+          <strong>Luna Matias diz:</strong> “As crianças de {countryName} amam essa brincadeira! Vem aprender comigo e brincar aqui também!”
         </p>
       </div>
 
@@ -611,7 +611,7 @@ function LocalGameSection({
         </div>
         <button
           onClick={() => (speaking ? stop() : speak(intro))}
-          aria-label={speaking ? "Parar narração" : "Ouvir regras"}
+          aria-label={speaking ? "Pedir para a Luna parar" : "Ouvir as regras"}
           className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
         >
           {speaking ? (
@@ -620,7 +620,7 @@ function LocalGameSection({
             </>
           ) : (
             <>
-              <Volume2 className="h-5 w-5" /> Ouvir Regras
+              <Volume2 className="h-5 w-5" /> Ouvir as regras
             </>
           )}
         </button>
@@ -629,7 +629,7 @@ function LocalGameSection({
       {/* Regras */}
       <div className="mt-6 rounded-2xl bg-muted/40 p-5 border-2 border-border/40">
         <h3 className="font-display font-bold text-lg flex items-center gap-2">
-          📋 Como brincar
+          📋 Como se brinca
         </h3>
         <ol className="mt-3 space-y-2">
           {game.rules.map((r, i) => (
@@ -649,7 +649,7 @@ function LocalGameSection({
       {/* Mini-jogo interativo */}
       <div className="mt-6 rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-transparent p-5 sm:p-6">
         <h3 className="font-display font-bold text-lg flex items-center gap-2">
-          🎮 Jogue agora! <span className="text-sm font-normal text-foreground/60">— {game.interaction.prompt}</span>
+          🎮 Bora brincar! <span className="text-sm font-normal text-foreground/60">— {game.interaction.prompt}</span>
         </h3>
 
         <div className="mt-4 h-3 rounded-full bg-muted overflow-hidden">
@@ -671,12 +671,12 @@ function LocalGameSection({
               className="text-center"
             >
               <div className="text-6xl mb-2">🏆</div>
-              <p className="text-xl font-display font-bold">Parabéns! Você jogou {game.name}!</p>
+              <p className="text-xl font-display font-bold">Boa! Você brincou de {game.name}!</p>
               <button
                 onClick={reset}
                 className="mt-4 inline-flex rounded-full bg-card border-2 border-border px-5 py-2 font-bold text-sm hover:border-primary/40"
               >
-                Jogar de novo
+                Brincar de novo
               </button>
             </motion.div>
           ) : (

@@ -10,17 +10,17 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Página não encontrada</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          A página que você procura não existe ou foi movida.
+        <div className="text-6xl">🧭</div>
+        <h1 className="mt-2 text-4xl font-display font-bold text-foreground">Ops! Nos perdemos</h1>
+        <p className="mt-3 text-base text-muted-foreground">
+          Essa página não está no nosso mapa. Vamos voltar ao começo da aventura?
         </p>
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-sticker hover:-translate-y-0.5 transition"
           >
-            Voltar ao início
+            Voltar ao início 🌍
           </Link>
         </div>
       </div>

@@ -51,7 +51,7 @@ function LoginPage() {
       return;
     }
     if (!email.trim() || password.length < 6) {
-      setError("Informe email válido e senha com 6+ caracteres.");
+      setError("Use um e-mail válido e uma senha com pelo menos 6 caracteres.");
       return;
     }
 
@@ -69,7 +69,7 @@ function LoginPage() {
         if (err) {
           const msg = err.message.toLowerCase();
           if (msg.includes("registered") || msg.includes("already") || msg.includes("exists")) {
-            setError("Este email já está cadastrado. Faça login.");
+            setError("Este e-mail já tem aventura por aqui. Faça login!");
             setMode("signin");
             return;
           }
@@ -78,7 +78,7 @@ function LoginPage() {
         // Supabase returns an "obfuscated" user with empty identities when the
         // email already exists (and auto-confirm is on). Detect and surface it.
         if (data.user && data.user.identities && data.user.identities.length === 0) {
-          setError("Este email já está cadastrado. Faça login.");
+          setError("Este e-mail já tem aventura por aqui. Faça login!");
           setMode("signin");
           return;
         }
@@ -103,7 +103,7 @@ function LoginPage() {
         if (err) {
           const msg = err.message.toLowerCase();
           if (msg.includes("invalid") || msg.includes("credentials")) {
-            setError("Email ou senha incorretos.");
+            setError("E-mail ou senha não conferem. Tente de novo!");
             return;
           }
           throw err;
@@ -111,7 +111,7 @@ function LoginPage() {
         // Navigation handled by useEffect once profile loads
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Algo deu errado.");
+      setError(err instanceof Error ? err.message : "Ops! Algo deu errado. Tente de novo.");
     } finally {
       setBusy(false);
     }
@@ -124,7 +124,7 @@ function LoginPage() {
       redirect_uri: `${window.location.origin}/lobby`,
     });
     if (result.error) {
-      setError("Não foi possível entrar com o Google.");
+      setError("Não conseguimos entrar com o Google agora. Tente de novo!");
       setBusy(false);
       return;
     }
@@ -138,7 +138,7 @@ function LoginPage() {
     if (profileLoading) {
       return (
         <div className="min-h-screen grid place-items-center">
-          <div className="text-foreground/60 font-bold">Carregando...</div>
+          <div className="text-foreground/60 font-bold">Preparando sua aventura… 🚀</div>
         </div>
       );
     }
@@ -168,10 +168,10 @@ function LoginPage() {
         />
         <div className="absolute bottom-10 left-10 right-10 text-white">
           <h2 className="font-display text-4xl font-bold leading-tight">
-            Bem-vindo,<br />pequeno explorador! 🌍
+            Bora explorar<br />o mundo? 🌍
           </h2>
           <p className="mt-3 text-white/90">
-            Crie ou acesse seu perfil para guardar seu progresso.
+            Crie seu perfil de explorador e leve seus carimbos com você.
           </p>
         </div>
       </div>
@@ -186,11 +186,11 @@ function LoginPage() {
           </Link>
 
           <h1 className="mt-6 text-4xl font-display font-bold">
-            {mode === "signup" ? "Vamos começar! ✨" : "Bem-vindo de volta! 👋"}
+            {mode === "signup" ? "Bora começar! ✨" : "Que bom te ver! 👋"}
           </h1>
           <p className="mt-2 text-foreground/70">
             {mode === "signup"
-              ? "Crie sua conta para salvar carimbos e progresso."
+              ? "Crie seu perfil de explorador e guarde seus carimbos."
               : "Entre para continuar sua aventura."}
           </p>
 
@@ -206,12 +206,12 @@ function LoginPage() {
               <path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.83z" />
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" />
             </svg>
-            Continuar com Google
+            Entrar com Google
           </button>
 
           <div className="my-5 flex items-center gap-3 text-xs text-foreground/50 font-bold uppercase">
             <div className="h-px flex-1 bg-border" />
-            ou com email
+            ou com e-mail
             <div className="h-px flex-1 bg-border" />
           </div>
 
@@ -225,7 +225,7 @@ function LoginPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     maxLength={24}
-                    placeholder="Ex: Capitã Júlia"
+                    placeholder="Ex.: Capitã Júlia"
                     className="mt-2 w-full rounded-2xl border-2 border-border bg-background px-5 py-3 font-semibold focus:outline-none focus:border-primary"
                   />
                 </div>
@@ -254,7 +254,7 @@ function LoginPage() {
             )}
 
             <div>
-              <label className="text-sm font-bold">Email</label>
+              <label className="text-sm font-bold">E-mail do seu adulto</label>
               <input
                 type="email"
                 value={email}
@@ -264,12 +264,12 @@ function LoginPage() {
               />
             </div>
             <div>
-              <label className="text-sm font-bold">Senha</label>
+              <label className="text-sm font-bold">Senha secreta</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="No mínimo 6 caracteres"
                 className="mt-2 w-full rounded-2xl border-2 border-border bg-background px-5 py-3 font-semibold focus:outline-none focus:border-primary"
               />
             </div>
@@ -283,11 +283,11 @@ function LoginPage() {
               className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground px-7 py-4 font-bold shadow-float hover:-translate-y-0.5 transition disabled:opacity-50"
             >
               {mode === "signup" ? <Rocket className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
-              {mode === "signup" ? "Criar conta e entrar" : "Entrar"}
+              {mode === "signup" ? "Começar aventura" : "Entrar"}
             </button>
 
             <p className="text-center text-sm text-foreground/70">
-              {mode === "signup" ? "Já tem conta? " : "Ainda não tem conta? "}
+              {mode === "signup" ? "Já é explorador? " : "Ainda não tem conta? "}
               <button
                 type="button"
                 onClick={() => {
@@ -297,7 +297,7 @@ function LoginPage() {
                 }}
                 className="font-bold text-primary hover:underline"
               >
-                {mode === "signup" ? "Entrar" : "Criar conta"}
+                {mode === "signup" ? "Entrar" : "Criar passaporte"}
               </button>
             </p>
           </form>
@@ -323,14 +323,14 @@ function ProfileCompletion({
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-md">
-        <h1 className="text-3xl font-display font-bold">Falta pouco! ✨</h1>
-        <p className="mt-2 text-foreground/70">Escolha um nome e avatar de explorador.</p>
+        <h1 className="text-3xl font-display font-bold">Falta pouquinho! ✨</h1>
+        <p className="mt-2 text-foreground/70">Escolha seu nome e avatar de explorador.</p>
 
         <form
           onSubmit={(e) => {
             e.preventDefault();
             if (!name.trim()) {
-              setError("Escolha um nome!");
+              setError("Escolha seu nome de explorador!");
               return;
             }
             onSubmit(name.trim(), avatar);
@@ -342,7 +342,7 @@ function ProfileCompletion({
             value={name}
             onChange={(e) => setName(e.target.value)}
             maxLength={24}
-            placeholder="Ex: Capitão Pedro"
+            placeholder="Ex.: Capitão Pedro"
             className="w-full rounded-2xl border-2 border-border bg-background px-5 py-3 font-semibold focus:outline-none focus:border-primary"
           />
           <div className="grid grid-cols-4 gap-3">
@@ -366,7 +366,7 @@ function ProfileCompletion({
             type="submit"
             className="w-full rounded-full bg-primary text-primary-foreground px-7 py-4 font-bold shadow-float hover:-translate-y-0.5 transition"
           >
-            Entrar no lobby
+            Entrar na aventura
           </button>
         </form>
       </div>

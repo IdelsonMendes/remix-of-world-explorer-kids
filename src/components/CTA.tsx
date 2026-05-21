@@ -10,19 +10,19 @@ export function CTA() {
           <div className="relative">
             <div className="text-5xl mb-3 animate-wiggle inline-block">🚀</div>
             <h2 className="text-4xl sm:text-5xl font-display font-bold">
-              Pronto para a primeira aventura?
+              Bora começar a aventura?
             </h2>
             <p className="mt-4 text-lg sm:text-xl opacity-95 max-w-xl mx-auto">
-              Cadastre-se grátis e ganhe seu passaporte digital com 3 países desbloqueados.
+              Crie seu passaporte gratuito e descubra o mundo com a Luna Matias!
             </p>
             <a
               href="#mapa"
               className="mt-8 inline-flex items-center gap-2 rounded-full bg-white text-primary px-8 py-4 font-bold shadow-sticker hover:-translate-y-1 transition"
             >
               <Rocket className="h-5 w-5" />
-              Criar passaporte grátis
+              Começar aventura
             </a>
-            <p className="mt-3 text-xs opacity-80">Sem cartão • Cancela quando quiser</p>
+            <p className="mt-3 text-xs opacity-80">Grátis • Sem anúncios • Seguro para crianças</p>
           </div>
         </div>
       </div>
