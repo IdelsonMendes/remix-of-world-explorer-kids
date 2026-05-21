@@ -90,7 +90,7 @@ function SoundPrompt({
           <div className="text-sm text-foreground/60 mt-1">({phonetic})</div>
         )}
         <div className="text-xs text-foreground/50 mt-2">
-          Toque no botão para ouvir
+          Toque no botão para ouvir!
         </div>
       </div>
     </div>
@@ -224,13 +224,13 @@ export function ChoiceQuiz({
           <div className="text-5xl">{emoji}</div>
           <h3 className="mt-3 text-2xl font-display font-bold">{title} concluído!</h3>
           <p className="mt-2 text-foreground/70">
-            Você acertou <strong>{score}</strong> de <strong>{questions.length}</strong>.
+            Você acertou <strong>{score}</strong> de <strong>{questions.length}</strong>. Boa!
           </p>
           <button
             onClick={reset}
             className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2 font-bold text-sm"
           >
-            <RotateCcw className="h-4 w-4" /> Jogar novamente
+            <RotateCcw className="h-4 w-4" /> Jogar de novo
           </button>
         </div>
       </div>
@@ -282,7 +282,7 @@ export function ChoiceQuiz({
         })}
       </div>
       <p className="mt-4 text-sm text-foreground/60 inline-flex items-center gap-2">
-        <Trophy className="h-4 w-4" /> Pontuação: <strong>{score}</strong>
+        <Trophy className="h-4 w-4" /> Acertos: <strong>{score}</strong>
       </p>
     </div>
   );

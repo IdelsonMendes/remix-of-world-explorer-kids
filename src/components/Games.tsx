@@ -38,15 +38,15 @@ export function Games() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <div>
             <span className="inline-block rounded-full bg-accent/60 px-4 py-1 text-xs font-bold uppercase tracking-wider text-accent-foreground">
-              Mini-jogos & quizzes
+              Brincadeiras e quizzes
             </span>
             <h2 className="mt-4 text-4xl sm:text-5xl font-display font-bold">
               Brincadeiras que ensinam 🎉
             </h2>
           </div>
           <p className="max-w-md text-foreground/70">
-            Atividades curtas, com instruções faladas e linguagem fácil — feitas para
-            pequenos exploradores de 6 a 12 anos.
+            Atividades curtinhas, com narração da Luna e linguagem fácil — feitas para
+            exploradores de 6 a 12 anos.
           </p>
         </div>
 

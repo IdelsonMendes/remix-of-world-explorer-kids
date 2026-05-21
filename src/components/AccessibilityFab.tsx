@@ -60,8 +60,8 @@ export function AccessibilityFab() {
             </div>
 
             <p className="text-xs text-foreground/70 font-semibold leading-snug">
-              Modos para quem ainda não lê. Toque para ouvir o que está na tela ou
-              use a sua voz para navegar.
+              Para pequenos exploradores que ainda não leem. A Luna lê para você
+              ou você pode falar para abrir o mapa, as brincadeiras ou o passaporte.
             </p>
 
             <button
@@ -77,9 +77,9 @@ export function AccessibilityFab() {
                 {narrationOn ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
               </span>
               <span className="flex-1 min-w-0">
-                <span className="block font-bold text-sm">Narração ao tocar</span>
+                <span className="block font-bold text-sm">Luna lê para você</span>
                 <span className="block text-[11px] text-foreground/60">
-                  {narrationOn ? "Ativada — toque em qualquer item" : "Desativada"}
+                  {narrationOn ? "Ligado — toque em qualquer texto" : "Desligado"}
                 </span>
               </span>
             </button>
@@ -101,13 +101,13 @@ export function AccessibilityFab() {
                 {voiceCommandsOn ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
               </span>
               <span className="flex-1 min-w-0">
-                <span className="block font-bold text-sm">Comandos de voz</span>
+                <span className="block font-bold text-sm">Falar para navegar</span>
                 <span className="block text-[11px] text-foreground/60">
                   {voiceCommandsOn
                     ? listening
-                      ? "Ouvindo… diga: mapa, brincadeiras, passaporte"
-                      : "Ativado"
-                    : "Desativado"}
+                      ? "Ouvindo… diga: mapa, brincadeiras ou passaporte"
+                      : "Ligado"
+                    : "Desligado"}
                 </span>
               </span>
             </button>
@@ -127,7 +127,7 @@ export function AccessibilityFab() {
               <span className="flex-1 min-w-0">
                 <span className="block font-bold text-sm">Sons divertidos</span>
                 <span className="block text-[11px] text-foreground/60">
-                  {sfxOn ? "Ativados — feedback ao acertar" : "Desativados"}
+                  {sfxOn ? "Ligados — barulhinhos ao acertar" : "Desligados"}
                 </span>
               </span>
             </button>
@@ -137,7 +137,7 @@ export function AccessibilityFab() {
                 onClick={stop}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-foreground/10 hover:bg-foreground/15 px-3 py-2 text-xs font-bold"
               >
-                <Square className="h-3 w-3" /> Parar narração
+                <Square className="h-3 w-3" /> Pedir para a Luna parar
               </button>
             )}
           </motion.div>

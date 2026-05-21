@@ -25,7 +25,7 @@ export function Hero() {
             className="inline-flex items-center gap-2 rounded-full bg-accent/60 px-4 py-1.5 text-sm font-bold text-accent-foreground shadow-sticker"
           >
             <Sparkles className="h-4 w-4" />
-            Novo! Plataforma educativa para crianças
+            Aventura educativa para pequenos exploradores
           </motion.div>
 
           <motion.h1
@@ -45,8 +45,8 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="mt-6 text-lg sm:text-xl text-foreground/75 max-w-xl"
           >
-            Explore países, descubra culturas, jogue mini‑jogos e colecione carimbos
-            no seu passaporte digital — com a Luna Matias guiando cada aventura.
+            Descubra países, ouça histórias, jogue brincadeiras e colecione carimbos
+            no seu passaporte — com a Luna Matias guiando cada aventura.
           </motion.p>
 
           <motion.div
@@ -60,14 +60,14 @@ export function Hero() {
               className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-7 py-4 text-base font-bold shadow-float hover:-translate-y-1 transition-all"
             >
               <Rocket className="h-5 w-5" />
-              {isLoggedIn ? "Ir para o lobby" : "Começar minha viagem"}
+              {isLoggedIn ? "Continuar aventura" : "Começar aventura"}
             </Link>
             <a
               href="#jogos"
               className="inline-flex items-center gap-2 rounded-full bg-card border-2 border-foreground/10 px-7 py-4 text-base font-bold shadow-sticker hover:border-primary/40 transition"
             >
               <PlayCircle className="h-5 w-5 text-primary" />
-              Ver como funciona
+              Espiar as brincadeiras
             </a>
           </motion.div>
 
@@ -78,18 +78,18 @@ export function Hero() {
             className="mt-10 flex items-center gap-6 text-sm text-foreground/70"
           >
             <div>
-              <div className="font-display font-bold text-2xl text-foreground">5</div>
-              <div>países para explorar</div>
+              <div className="font-display font-bold text-2xl text-foreground">20</div>
+              <div>países para descobrir</div>
             </div>
             <div className="h-10 w-px bg-border" />
             <div>
-              <div className="font-display font-bold text-2xl text-foreground">10</div>
-              <div>mini-jogos & quizzes</div>
+              <div className="font-display font-bold text-2xl text-foreground">6</div>
+              <div>brincadeiras educativas</div>
             </div>
             <div className="hidden sm:block h-10 w-px bg-border" />
             <div className="hidden sm:block">
               <div className="font-display font-bold text-2xl text-foreground">100%</div>
-              <div>seguro & sem anúncios</div>
+              <div>seguro e sem anúncios</div>
             </div>
           </motion.div>
         </div>
@@ -112,10 +112,10 @@ export function Hero() {
                 className="w-full h-auto drop-shadow-xl"
               />
               <div className="absolute -top-4 -left-4 rotate-[-8deg] rounded-2xl bg-accent text-accent-foreground px-4 py-2 font-display font-bold shadow-sticker">
-                Olá! Sou a Luna 👋
+                Oi! Sou a Luna Matias 👋
               </div>
               <div className="absolute -bottom-5 -right-3 rotate-[6deg] rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 font-display font-bold shadow-sticker">
-                Vamos viajar?
+                Vamos viajar juntos?
               </div>
             </div>
           </div>

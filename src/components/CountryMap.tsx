@@ -15,13 +15,13 @@ export function CountryMap() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="inline-block rounded-full bg-secondary/30 px-4 py-1 text-xs font-bold uppercase tracking-wider text-secondary-foreground">
-            Mapa interativo
+            Mapa de descoberta
           </span>
           <h2 className="mt-4 text-4xl sm:text-5xl font-display font-bold">
             Toque em um país e descubra! 🗺️
           </h2>
           <p className="mt-4 text-lg text-foreground/70">
-            Cada destino tem histórias e jogos esperando por você.
+            Cada destino tem histórias, brincadeiras e curiosidades esperando você.
           </p>
         </div>
 
@@ -87,10 +87,10 @@ export function CountryMap() {
 
               <div className="mt-6 grid grid-cols-2 gap-2 text-center text-xs font-bold">
                 <div className="rounded-2xl bg-accent/40 py-3">
-                  <div className="text-2xl">🎮</div>2 jogos
+                  <div className="text-2xl">🎮</div>Brincadeiras
                 </div>
                 <div className="rounded-2xl bg-[var(--mint)]/40 py-3">
-                  <div className="text-2xl">📖</div>1 história
+                  <div className="text-2xl">📖</div>Histórias
                 </div>
               </div>
 

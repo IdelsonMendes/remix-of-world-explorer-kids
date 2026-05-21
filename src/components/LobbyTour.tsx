@@ -16,50 +16,50 @@ const STEPS: Step[] = [
     id: "welcome",
     target: null,
     emoji: "",
-    title: "Oi! Eu sou a Luna Maria",
-    lines: ["Vou te mostrar esse mundo divertido!"],
+    title: "Oi! Eu sou a Luna Matias",
+    lines: ["Vou te mostrar esse mundo cheio de aventuras!"],
   },
   {
     id: "map",
     target: "[data-tour='map']",
     emoji: "🗺️",
     title: "Mapa de descoberta",
-    lines: ["Aqui você viaja pelo mundo!", "Toque nos países para descobrir coisas incríveis."],
+    lines: ["Aqui você viaja pelo mundo!", "Toque nos países para descobrir histórias e brincadeiras."],
   },
   {
     id: "games",
     target: "[data-tour='first-game']",
     emoji: "🎮",
     title: "Brincadeiras",
-    lines: ["Aqui ficam os jogos!", "Você aprende brincando."],
+    lines: ["Aqui ficam as brincadeiras!", "Você aprende sobre o mundo se divertindo."],
   },
   {
     id: "profile",
     target: "[data-tour='profile']",
     emoji: "📈",
     title: "Seu progresso",
-    lines: ["Aqui você vê o quanto já explorou!", "A cada aventura, a barrinha cresce mais!"],
+    lines: ["Veja o quanto você já explorou!", "A cada aventura, a barrinha cresce mais."],
   },
   {
     id: "account",
     target: "[data-tour='account-menu']",
     emoji: "⚙️",
-    title: "Sua conta",
-    lines: ["Toque aqui para mudar seu nome, avatar e e-mail.", "É o seu cantinho de ajustes!"],
+    title: "Minha conta",
+    lines: ["Toque aqui para mudar seu nome e avatar.", "É o seu cantinho de explorador!"],
   },
   {
     id: "passport",
     target: "[data-tour='passport']",
     emoji: "📒",
     title: "Passaporte digital",
-    lines: ["Guarda suas aventuras!", "Colecione países e conquistas."],
+    lines: ["Aqui ficam os carimbos das suas aventuras!", "Colecione todos os países e vire Mestre Explorador."],
   },
   {
     id: "finish",
     target: null,
     emoji: "🚀",
-    title: "Agora é sua vez!",
-    lines: ["Vamos explorar o mundo juntos!"],
+    title: "Agora é a sua vez!",
+    lines: ["Bora explorar o mundo juntos!"],
   },
 ];
 
@@ -249,7 +249,7 @@ export function LobbyTour({ open, onClose }: { open: boolean; onClose: () => voi
                   <div className="flex items-start gap-4">
                     <motion.img
                       src={luna}
-                      alt="Luna Maria"
+                      alt="Luna Matias"
                       className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl object-contain bg-accent/30 shadow-sticker shrink-0"
                       animate={{ rotate: [0, -6, 6, 0], y: [0, -4, 0] }}
                       transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}

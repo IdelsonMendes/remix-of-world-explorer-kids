@@ -87,7 +87,7 @@ export function MemoryGame() {
         <div>
           <h2 className="text-2xl font-display font-bold">🧠 Jogo da Memória</h2>
           <p className="text-sm text-foreground/70">
-            Encontre os pares de bandeiras! ({ROUND_SIZE} pares por partida)
+            Encontre os pares de bandeiras iguais! ({ROUND_SIZE} pares por partida)
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -204,7 +204,7 @@ export function MemoryGame() {
       {done && (
         <div className="mt-6 rounded-2xl bg-gradient-sunset text-white p-5 text-center shadow-sticker">
           <Trophy className="inline h-5 w-5 mr-1" />
-          <strong>Boa! Você terminou em {moves} jogadas! 🎉</strong>
+          <strong>Mandou bem! Você achou todos os pares em {moves} jogadas! 🎉</strong>
         </div>
       )}
     </div>

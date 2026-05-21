@@ -50,7 +50,7 @@ function AccountPage() {
   if (loading || !session) {
     return (
       <div className="min-h-screen grid place-items-center">
-        <div className="text-foreground/60 font-bold">Carregando...</div>
+        <div className="text-foreground/60 font-bold">Preparando sua conta… ⚙️</div>
       </div>
     );
   }
@@ -61,13 +61,13 @@ function AccountPage() {
   };
 
   const saveProfile = async () => {
-    if (!name.trim()) return flash("err", "Escolha um nome.");
+    if (!name.trim()) return flash("err", "Escolha um nome de explorador.");
     setBusy("profile");
     try {
       await setProfile(name.trim(), chosenAvatar);
-      flash("ok", "Perfil atualizado!");
+      flash("ok", "Perfil de explorador atualizado!");
     } catch (e) {
-      flash("err", e instanceof Error ? e.message : "Erro ao salvar.");
+      flash("err", e instanceof Error ? e.message : "Não consegui salvar agora. Tente de novo.");
     } finally {
       setBusy(null);
     }
@@ -76,25 +76,25 @@ function AccountPage() {
   const saveEmail = async () => {
     const newEmail = email.trim();
     if (!newEmail || newEmail === session.user.email) {
-      return flash("err", "Informe um email novo.");
+      return flash("err", "Informe um e-mail diferente do atual.");
     }
     setBusy("email");
     const { error } = await supabase.auth.updateUser({ email: newEmail });
     setBusy(null);
     if (error) return flash("err", error.message);
-    flash("ok", "Confirme o novo email pelo link enviado para sua caixa.");
+    flash("ok", "Confirme o novo e-mail pelo link que enviamos para você.");
   };
 
   const savePassword = async () => {
-    if (password.length < 6) return flash("err", "Senha precisa de 6+ caracteres.");
-    if (password !== password2) return flash("err", "As senhas não coincidem.");
+    if (password.length < 6) return flash("err", "A senha precisa ter pelo menos 6 caracteres.");
+    if (password !== password2) return flash("err", "As duas senhas não são iguais.");
     setBusy("password");
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(null);
     if (error) return flash("err", error.message);
     setPassword("");
     setPassword2("");
-    flash("ok", "Senha atualizada!");
+    flash("ok", "Senha atualizada com sucesso!");
   };
 
   const handleLogout = async () => {
@@ -104,7 +104,7 @@ function AccountPage() {
 
   const handleDelete = async () => {
     if (confirmDelete !== "EXCLUIR") {
-      return flash("err", "Digite EXCLUIR para confirmar.");
+      return flash("err", "Digite a palavra EXCLUIR para confirmar.");
     }
     setBusy("delete");
     try {
@@ -113,7 +113,7 @@ function AccountPage() {
       navigate({ to: "/" });
     } catch (e) {
       setBusy(null);
-      flash("err", e instanceof Error ? e.message : "Não foi possível excluir.");
+      flash("err", e instanceof Error ? e.message : "Não consegui excluir a conta agora.");
     }
   };
 
@@ -139,7 +139,7 @@ function AccountPage() {
       <main className="mx-auto max-w-3xl px-4 sm:px-6 py-10 space-y-8">
         <div>
           <h1 className="text-3xl sm:text-4xl font-display font-bold">Minha conta</h1>
-          <p className="mt-2 text-foreground/70">Gerencie seu perfil, login e segurança.</p>
+          <p className="mt-2 text-foreground/70">Seu cantinho de explorador. Mude seu nome, avatar e senha aqui.</p>
         </div>
 
         {msg && (
@@ -157,7 +157,7 @@ function AccountPage() {
         {/* Profile */}
         <section className="rounded-3xl border-2 border-border bg-card p-6 sm:p-8 shadow-sticker">
           <h2 className="font-display text-2xl font-bold inline-flex items-center gap-2">
-            <UserIcon className="h-5 w-5 text-primary" /> Perfil
+            <UserIcon className="h-5 w-5 text-primary" /> Perfil de explorador
           </h2>
 
           <div className="mt-6 flex items-center gap-4">
@@ -167,7 +167,7 @@ function AccountPage() {
               className="h-20 w-20 rounded-2xl object-contain bg-muted/30 border-2 border-border"
             />
             <div>
-              <p className="font-bold">{name || "Sem nome"}</p>
+              <p className="font-bold">{name || "Sem nome ainda"}</p>
               <p className="text-sm text-foreground/60">{session.user.email}</p>
             </div>
           </div>
@@ -212,9 +212,9 @@ function AccountPage() {
         {/* Email */}
         <section className="rounded-3xl border-2 border-border bg-card p-6 sm:p-8 shadow-sticker">
           <h2 className="font-display text-2xl font-bold inline-flex items-center gap-2">
-            <Mail className="h-5 w-5 text-primary" /> Email
+            <Mail className="h-5 w-5 text-primary" /> E-mail
           </h2>
-          <label className="mt-6 block text-sm font-bold">Endereço de email</label>
+          <label className="mt-6 block text-sm font-bold">Endereço de e-mail</label>
           <input
             type="email"
             value={email}
@@ -222,14 +222,14 @@ function AccountPage() {
             className="mt-2 w-full rounded-2xl border-2 border-border bg-background px-5 py-3 font-semibold focus:outline-none focus:border-primary"
           />
           <p className="mt-2 text-xs text-foreground/60">
-            Você receberá um link de confirmação no novo email.
+            Vamos enviar um link de confirmação para o novo e-mail.
           </p>
           <button
             onClick={saveEmail}
             disabled={busy === "email"}
             className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition disabled:opacity-50"
           >
-            <Save className="h-4 w-4" /> Atualizar email
+            <Save className="h-4 w-4" /> Atualizar e-mail
           </button>
         </section>
 
@@ -245,7 +245,7 @@ function AccountPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="No mínimo 6 caracteres"
                 className="mt-2 w-full rounded-2xl border-2 border-border bg-background px-5 py-3 font-semibold focus:outline-none focus:border-primary"
               />
             </div>
@@ -271,10 +271,10 @@ function AccountPage() {
         {/* Tutorial */}
         <section className="rounded-3xl border-2 border-border bg-card p-6 sm:p-8 shadow-sticker">
           <h2 className="font-display text-2xl font-bold inline-flex items-center gap-2">
-            <HelpCircle className="h-5 w-5 text-primary" /> Tutorial
+            <HelpCircle className="h-5 w-5 text-primary" /> Apresentação da Luna
           </h2>
           <p className="mt-2 text-sm text-foreground/70">
-            Quer rever a apresentação da Luna Maria? É só clicar abaixo.
+            Quer rever a apresentação da Luna Matias? É só tocar aqui!
           </p>
           <button
             onClick={() => {
@@ -283,7 +283,7 @@ function AccountPage() {
             }}
             className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
           >
-            <HelpCircle className="h-4 w-4" /> Repetir tutorial
+            <HelpCircle className="h-4 w-4" /> Ver de novo
           </button>
         </section>
 
@@ -293,8 +293,8 @@ function AccountPage() {
             <Trash2 className="h-5 w-5" /> Excluir conta
           </h2>
           <p className="mt-2 text-sm text-foreground/70">
-            Esta ação é permanente. Todos os seus carimbos, progresso e perfil
-            serão apagados e não podem ser recuperados.
+            Esta ação é para sempre. Todos os seus carimbos e seu progresso serão
+            apagados e não dá para recuperar. Peça ajuda a um adulto.
           </p>
           <label className="mt-6 block text-sm font-bold">
             Para confirmar, digite <span className="font-mono">EXCLUIR</span>

@@ -89,11 +89,11 @@ export function AdventureVideos({
       >
         <div className="text-3xl">🌎</div>
         <p className="text-base sm:text-lg font-semibold text-foreground/85 flex-1">
-          <strong>Luna Matias diz:</strong> “Vamos conhecer {countryName} juntos pelos vídeos da aventura! Escolha um tópico que mais te encanta!”
+          <strong>Luna Matias diz:</strong> “Bora conhecer {countryName} pelos vídeos da aventura! Escolha o tópico que mais te encanta. 🌎”
         </p>
         <button
           onClick={() => (speaking ? stop() : speak(intro))}
-          aria-label={speaking ? "Parar narração" : "Ouvir convite da Luna"}
+          aria-label={speaking ? "Pedir para a Luna parar" : "Ouvir convite da Luna"}
           className="flex-shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary text-primary-foreground shadow-sticker hover:-translate-y-0.5 transition"
         >
           {speaking ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
@@ -104,7 +104,7 @@ export function AdventureVideos({
         <VideoIcon className="h-6 w-6 text-primary" /> Vídeos da Aventura
       </h2>
       <p className="mt-1 text-foreground/70 text-sm">
-        Conteúdo educativo do YouTube Kids — clique em um card para começar a aventura!
+        Vídeos educativos com legendas — toque em um card para começar!
       </p>
 
       {/* Cards grid */}
@@ -192,7 +192,7 @@ export function AdventureVideos({
           </div>
 
           <p className="mt-3 text-xs text-foreground/60 text-center">
-            🎬 Vídeos do YouTube com legendas e busca segura ativada. Peça ajuda a um adulto se precisar!
+            🎬 Vídeos com legendas em português. Peça ajuda a um adulto se precisar!
           </p>
         </motion.div>
       )}

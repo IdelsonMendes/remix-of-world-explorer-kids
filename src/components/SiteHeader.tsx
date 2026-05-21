@@ -33,7 +33,7 @@ export function SiteHeader() {
         </Link>
         <nav className="hidden md:flex items-center gap-7 text-sm font-semibold text-foreground/80">
           <Link to="/" hash="mapa" className="hover:text-primary transition">Mapa</Link>
-          <Link to="/" hash="jogos" className="hover:text-primary transition">Jogos</Link>
+          <Link to="/" hash="jogos" className="hover:text-primary transition">Brincadeiras</Link>
           <Link to="/" hash="passaporte" className="hover:text-primary transition">Passaporte</Link>
           <Link to="/" hash="familia" className="hover:text-primary transition">Para a família</Link>
         </nav>
@@ -45,7 +45,7 @@ export function SiteHeader() {
               <ChevronDown className="h-4 w-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-52">
-              <DropdownMenuLabel>Olá, {explorerName}!</DropdownMenuLabel>
+              <DropdownMenuLabel>Oi, {explorerName}! 👋</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link to="/lobby" className="cursor-pointer">
@@ -71,7 +71,7 @@ export function SiteHeader() {
             to="/login"
             className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm font-bold shadow-sticker hover:-translate-y-0.5 transition"
           >
-            <LogIn className="h-4 w-4" /> Entrar
+            <LogIn className="h-4 w-4" /> Começar aventura
           </Link>
         )}
       </div>

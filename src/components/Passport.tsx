@@ -28,16 +28,16 @@ export function Passport() {
                   className="w-48 mx-auto animate-float-slow"
                 />
                 <h3 className="mt-4 text-2xl font-display font-bold">
-                  Crie seu passaporte! 🛂
+                  Pegue seu passaporte! 🛂
                 </h3>
                 <p className="mt-2 text-sm text-foreground/70">
-                  Faça login para começar a colecionar carimbos e salvar seu progresso.
+                  Entre na aventura para colecionar carimbos e guardar suas conquistas.
                 </p>
                 <Link
                   to="/login"
                   className="mt-5 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition"
                 >
-                  Entrar / Criar conta
+                  Começar aventura
                 </Link>
               </div>
             ) : (
@@ -109,7 +109,7 @@ export function Passport() {
                 {collected === totalCountries && (
                   <div className="mt-5 rounded-2xl bg-gradient-sunset text-white p-4 text-center shadow-sticker">
                     <Award className="inline h-5 w-5 mr-1" />
-                    <strong>Parabéns!</strong> Você completou o passaporte! 🌍✨
+                    <strong>Uhuul!</strong> Você ganhou todos os carimbos! 🌍✨
                   </div>
                 )}
               </div>
@@ -122,11 +122,11 @@ export function Passport() {
             Passaporte digital
           </span>
           <h2 className="mt-4 text-4xl sm:text-5xl font-display font-bold leading-tight">
-            Cada conquista <span className="text-primary">vira um carimbo</span>
+            Cada aventura <span className="text-primary">vira um carimbo</span>
           </h2>
           <p className="mt-5 text-lg text-foreground/75">
-            Crie seu passaporte, leia a história de cada país e complete os jogos para
-            ganhar o carimbo. Junte todos os {totalCountries} e vire mestre explorador! 🌟
+            Leia a história de cada país e complete as brincadeiras para ganhar o
+            carimbo. Junte os {totalCountries} e vire um Mestre Explorador! 🌟
           </p>
 
           <div className="mt-8 grid sm:grid-cols-2 gap-3">
@@ -140,20 +140,20 @@ export function Passport() {
               <span className="bg-[var(--sunshine)] h-11 w-11 rounded-xl grid place-items-center text-white shadow-sticker text-xl">
                 🎮
               </span>
-              <span className="font-semibold text-sm">Jogue 2 mini-jogos</span>
+              <span className="font-semibold text-sm">Jogue os 2 quizzes do país</span>
             </div>
             <div className="flex items-center gap-3 rounded-2xl bg-card p-4 border-2 border-border/40 shadow-sticker">
               <span className="bg-[var(--mint)] h-11 w-11 rounded-xl grid place-items-center text-white shadow-sticker text-xl">
                 🏅
               </span>
-              <span className="font-semibold text-sm">Ganhe o carimbo do país</span>
+              <span className="font-semibold text-sm">Ganhe o carimbo no passaporte</span>
             </div>
             <div className="flex items-center gap-3 rounded-2xl bg-card p-4 border-2 border-border/40 shadow-sticker">
               <span className="bg-[var(--grape)] h-11 w-11 rounded-xl grid place-items-center text-white shadow-sticker text-xl">
                 🌍
               </span>
               <span className="font-semibold text-sm">
-                Países disponíveis: {COUNTRY_LIST.map((c) => c.emoji).join(" ")}
+                Países da aventura: {COUNTRY_LIST.map((c) => c.emoji).join(" ")}
               </span>
             </div>
           </div>
