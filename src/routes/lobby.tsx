@@ -15,6 +15,7 @@ import { getAvatarSrc, usePassport } from "@/context/PassportContext";
 import { COUNTRY_LIST, COUNTRIES } from "@/data/countries";
 import { MINI_GAMES, COUNTRY_ISO } from "@/data/miniGames";
 import { LobbyMap } from "@/components/LobbyMap";
+import { Flag } from "@/components/Flag";
 import { Progress } from "@/components/ui/progress";
 
 export const Route = createFileRoute("/lobby")({
@@ -210,19 +211,7 @@ function LobbyPage() {
                   >
                     {stamp ? (
                       <>
-                        <span
-                          className={`fi fi-${iso}`}
-                          aria-label={`Bandeira de ${c.name}`}
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            display: "block",
-                            width: "100%",
-                            height: "100%",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                          }}
-                        />
+                        <Flag iso={iso} name={c.name} rounded="rounded-2xl" />
                         <span className="absolute inset-0 rounded-2xl border-2 border-[var(--coral)]/40 rotate-3 pointer-events-none" />
                         <span className="absolute bottom-0 left-0 right-0 text-[9px] font-bold text-white bg-black/55 px-1 py-0.5 text-center truncate">
                           {c.name}

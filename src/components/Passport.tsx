@@ -4,6 +4,7 @@ import passport from "@/assets/passport.png";
 import { usePassport } from "@/context/PassportContext";
 import { COUNTRIES, COUNTRY_LIST } from "@/data/countries";
 import { COUNTRY_ISO } from "@/data/miniGames";
+import { Flag } from "@/components/Flag";
 
 export function Passport() {
   const { explorerName, isLoggedIn, stamps, resetPassport } = usePassport();
@@ -80,19 +81,7 @@ export function Passport() {
                       >
                         {stamp ? (
                           <>
-                            <span
-                              className={`fi fi-${iso}`}
-                              aria-label={`Bandeira de ${c.name}`}
-                              style={{
-                                position: "absolute",
-                                inset: 0,
-                                display: "block",
-                                width: "100%",
-                                height: "100%",
-                                backgroundSize: "cover",
-                                backgroundPosition: "center",
-                              }}
-                            />
+                            <Flag iso={iso} name={c.name} rounded="rounded-2xl" />
                             <span className="absolute inset-0 rounded-2xl border-2 border-[var(--coral)]/40 rotate-3 pointer-events-none" />
                             <span className="absolute bottom-0 left-0 right-0 text-[9px] font-bold text-white bg-black/55 px-1 py-0.5 text-center truncate">
                               {c.name}

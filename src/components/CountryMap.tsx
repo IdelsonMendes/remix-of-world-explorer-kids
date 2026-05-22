@@ -5,6 +5,7 @@ import worldMap from "@/assets/world-map.jpg";
 import { COUNTRY_LIST } from "@/data/countries";
 import { COUNTRY_ISO } from "@/data/miniGames";
 import { usePassport } from "@/context/PassportContext";
+import { Flag } from "@/components/Flag";
 
 export function CountryMap() {
   const [selected, setSelected] = useState(COUNTRY_LIST[0]);
@@ -48,19 +49,7 @@ export function CountryMap() {
                     aria-label={c.name}
                     title={c.name}
                   >
-                    <span
-                      className={`fi fi-${iso}`}
-                      aria-hidden
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        display: "block",
-                        width: "100%",
-                        height: "100%",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }}
-                    />
+                    <Flag iso={iso} name={c.name} rounded="rounded-full" />
                     {hasStamp(c.slug) && (
                       <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--mint)] border-2 border-white text-[10px] grid place-items-center z-10">
                         ✓
