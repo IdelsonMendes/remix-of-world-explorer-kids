@@ -4,30 +4,30 @@ const games = [
   {
     icon: Gamepad2,
     title: "Caça aos Monumentos",
-    desc: "Encontre pontos turísticos escondidos em cenários animados.",
+    desc: "Veja a foto de um monumento famoso e adivinhe a qual país ele pertence!",
     bg: "bg-gradient-sunset",
-    tag: "Aventura",
+    tag: "Adivinhação",
   },
   {
     icon: Brain,
     title: "Quiz das Bandeiras",
-    desc: "Adivinhe a bandeira certa e ganhe estrelinhas para o passaporte.",
+    desc: "Olhe a bandeira colorida e descubra qual é o país certo.",
     bg: "bg-gradient-tropical",
     tag: "Memória",
   },
   {
     icon: Music2,
     title: "Sons do Mundo",
-    desc: "Escute músicas e idiomas de cada país e relacione com o lugar certo.",
+    desc: "Ouça uma saudação ou som cultural e adivinhe de qual país é!",
     bg: "bg-gradient-candy",
     tag: "Áudio",
   },
   {
     icon: Camera,
-    title: "Foto Safari",
-    desc: "Tire fotos virtuais de animais, comidas e festas pelo planeta.",
+    title: "Safari Fotográfico",
+    desc: "Veja um animal típico e descubra de qual país ele é.",
     bg: "bg-gradient-sky",
-    tag: "Cultural",
+    tag: "Animais",
   },
 ];
 

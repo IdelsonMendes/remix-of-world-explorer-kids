@@ -121,7 +121,7 @@ function LobbyPage() {
                 onClick={() => setTourOpen(true)}
                 className="cursor-pointer"
               >
-                <HelpCircle className="h-4 w-4 mr-2" /> Ver a apresentação da Luna
+                <HelpCircle className="h-4 w-4 mr-2" /> Ver tutorial
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem

@@ -122,11 +122,11 @@ export function Passport() {
             Passaporte digital
           </span>
           <h2 className="mt-4 text-4xl sm:text-5xl font-display font-bold leading-tight">
-            Cada aventura <span className="text-primary">vira um carimbo</span>
+            Cada carimbo <span className="text-primary">vira uma aventura</span>
           </h2>
           <p className="mt-5 text-lg text-foreground/75">
-            Leia a história de cada país e complete as brincadeiras para ganhar o
-            carimbo. Junte os {totalCountries} e vire um Mestre Explorador! 🌟
+            Leia a história de cada país e descubra as brincadeiras de cada lugar
+            para ganhar seus carimbos. Junte todos e vire um Mestre Explorador! 🌟
           </p>
 
           <div className="mt-8 grid sm:grid-cols-2 gap-3">
@@ -140,7 +140,7 @@ export function Passport() {
               <span className="bg-[var(--sunshine)] h-11 w-11 rounded-xl grid place-items-center text-white shadow-sticker text-xl">
                 🎮
               </span>
-              <span className="font-semibold text-sm">Jogue os 2 quizzes do país</span>
+              <span className="font-semibold text-sm">Descubra as brincadeiras de cada país</span>
             </div>
             <div className="flex items-center gap-3 rounded-2xl bg-card p-4 border-2 border-border/40 shadow-sticker">
               <span className="bg-[var(--mint)] h-11 w-11 rounded-xl grid place-items-center text-white shadow-sticker text-xl">
@@ -153,7 +153,7 @@ export function Passport() {
                 🌍
               </span>
               <span className="font-semibold text-sm">
-                Países da aventura: {COUNTRY_LIST.map((c) => c.emoji).join(" ")}
+                {totalCountries} países diferentes para explorar
               </span>
             </div>
           </div>
