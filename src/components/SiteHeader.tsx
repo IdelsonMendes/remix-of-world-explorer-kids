@@ -71,7 +71,7 @@ export function SiteHeader() {
             to="/login"
             className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm font-bold shadow-sticker hover:-translate-y-0.5 transition"
           >
-            <LogIn className="h-4 w-4" /> Começar aventura
+            <LogIn className="h-4 w-4" /> Entrar
           </Link>
         )}
       </div>

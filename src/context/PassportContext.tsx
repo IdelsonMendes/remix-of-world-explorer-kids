@@ -11,6 +11,12 @@ import samurai from "@/assets/avatars/samurai.png";
 import wizard from "@/assets/avatars/wizard.png";
 import superhero from "@/assets/avatars/superhero.png";
 import defaultAvatar from "@/assets/avatars/default.png";
+import astronautGirl from "@/assets/avatars/astronaut-girl.png";
+import explorerGirl from "@/assets/avatars/explorer-girl.png";
+import pirateGirl from "@/assets/avatars/pirate-girl.png";
+import scientistGirl from "@/assets/avatars/scientist-girl.png";
+import wizardGirl from "@/assets/avatars/wizard-girl.png";
+import superheroGirl from "@/assets/avatars/superhero-girl.png";
 
 export const DEFAULT_AVATAR_ID = "default";
 
@@ -24,6 +30,12 @@ const AVATAR_SRC_BY_ID: Record<string, string> = {
   samurai,
   wizard,
   superhero,
+  "astronaut-girl": astronautGirl,
+  "explorer-girl": explorerGirl,
+  "pirate-girl": pirateGirl,
+  "scientist-girl": scientistGirl,
+  "wizard-girl": wizardGirl,
+  "superhero-girl": superheroGirl,
 };
 
 /** Resolve a stored avatar id (or legacy src URL) to a usable image src. */
@@ -63,13 +75,19 @@ export type AvatarOption = { id: string; src: string; label: string };
 
 export const AVATAR_OPTIONS: AvatarOption[] = [
   { id: "astronaut", src: astronaut, label: "Astronauta" },
+  { id: "astronaut-girl", src: astronautGirl, label: "Astronauta" },
   { id: "explorer", src: explorer, label: "Explorador" },
+  { id: "explorer-girl", src: explorerGirl, label: "Exploradora" },
   { id: "pirate", src: pirate, label: "Pirata" },
+  { id: "pirate-girl", src: pirateGirl, label: "Pirata" },
   { id: "scientist", src: scientist, label: "Cientista" },
+  { id: "scientist-girl", src: scientistGirl, label: "Cientista" },
   { id: "adventurer", src: adventurer, label: "Aventureira" },
   { id: "samurai", src: samurai, label: "Samurai" },
   { id: "wizard", src: wizard, label: "Mago" },
+  { id: "wizard-girl", src: wizardGirl, label: "Maga" },
   { id: "superhero", src: superhero, label: "Super-herói" },
+  { id: "superhero-girl", src: superheroGirl, label: "Super-heroína" },
 ];
 
 type Stamp = {

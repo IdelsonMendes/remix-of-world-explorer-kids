@@ -4,6 +4,7 @@ import worldMap from "@/assets/world-map.jpg";
 import { COUNTRY_LIST } from "@/data/countries";
 import { COUNTRY_ISO } from "@/data/miniGames";
 import { usePassport } from "@/context/PassportContext";
+import { Flag } from "@/components/Flag";
 
 export function LobbyMap() {
   const { hasStamp } = usePassport();
@@ -29,19 +30,7 @@ export function LobbyMap() {
               aria-label={c.name}
               title={c.name}
             >
-              <span
-                className={`fi fi-${iso}`}
-                aria-hidden
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  display: "block",
-                  width: "100%",
-                  height: "100%",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              />
+              <Flag iso={iso} name={c.name} rounded="rounded-full" />
               {hasStamp(c.slug) && (
                 <motion.span
                   initial={{ scale: 0 }}
@@ -58,3 +47,4 @@ export function LobbyMap() {
     </div>
   );
 }
+

@@ -310,7 +310,7 @@ function AccountPage() {
             disabled={busy === "delete" || confirmDelete !== "EXCLUIR"}
             className="mt-4 block sm:inline-flex items-center gap-2 rounded-full bg-destructive text-destructive-foreground px-6 py-3 font-bold shadow-sticker hover:-translate-y-0.5 transition disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <Trash2 className="h-4 w-4" /> Excluir minha conta
+            <Trash2 className="h-4 w-4" /> Excluir
           </button>
         </section>
       </main>
