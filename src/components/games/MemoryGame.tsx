@@ -129,7 +129,7 @@ export function MemoryGame() {
       >
         <AnimatePresence mode="popLayout">
           {deck.map((card, i) => {
-            const isOpen = open.includes(i) || card.matched;
+            const isOpen = memorizePhase || open.includes(i) || card.matched;
             // Shuffle animation: cards fly in from random offsets
             const initialX = ((i * 73) % 11 - 5) * 30;
             const initialY = ((i * 53) % 7 - 3) * 30;
