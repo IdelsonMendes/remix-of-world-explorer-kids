@@ -32,6 +32,8 @@ export function MemoryGame() {
   const [moves, setMoves] = useState(0);
   const [done, setDone] = useState(false);
   const [shuffling, setShuffling] = useState(true);
+  const [memorizePhase, setMemorizePhase] = useState(true);
+  const [memorizeCount, setMemorizeCount] = useState(5);
 
   const reset = () => {
     setSeed((s) => s + 1);
