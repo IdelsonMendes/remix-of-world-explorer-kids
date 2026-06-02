@@ -40,14 +40,33 @@ export function MemoryGame() {
     setOpen([]);
     setMoves(0);
     setDone(false);
+    setMemorizePhase(true);
+    setMemorizeCount(5);
   };
 
-  // Refresh deck and play shuffle animation when seed changes
+  // Refresh deck, play shuffle animation and start memorize countdown
   useEffect(() => {
     setDeck(initialDeck);
     setShuffling(true);
-    const t = setTimeout(() => setShuffling(false), 900);
-    return () => clearTimeout(t);
+    setMemorizePhase(true);
+    setMemorizeCount(5);
+
+    const shuffleTimer = setTimeout(() => setShuffling(false), 900);
+
+    let count = 5;
+    const interval = setInterval(() => {
+      count -= 1;
+      setMemorizeCount(count);
+      if (count <= 0) {
+        clearInterval(interval);
+        setMemorizePhase(false);
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(shuffleTimer);
+      clearInterval(interval);
+    };
   }, [initialDeck]);
 
   const allMatched = deck.length > 0 && deck.every((c) => c.matched);
