@@ -123,6 +123,14 @@ export function MemoryGame() {
         </div>
       </div>
 
+      {memorizePhase && (
+        <div className="mt-4 flex items-center justify-center gap-2 rounded-2xl bg-primary/10 border-2 border-primary/30 p-3">
+          <span className="text-lg font-display font-bold text-primary animate-pulse">
+            Memorize as cartas: {memorizeCount}...
+          </span>
+        </div>
+      )}
+
       <div
         className="mt-6 grid grid-cols-3 sm:grid-cols-4 gap-3 sm:gap-4"
         style={{ perspective: 1000 }}
