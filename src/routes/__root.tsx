@@ -5,6 +5,7 @@ import appCss from "../styles.css?url";
 import { PassportProvider } from "@/context/PassportContext";
 import { NarrationProvider } from "@/context/NarrationContext";
 import { AccessibilityFab } from "@/components/AccessibilityFab";
+import { LunaChatbot } from "@/components/LunaChatbot";
 
 function NotFoundComponent() {
   return (
@@ -111,6 +112,7 @@ function RootComponent() {
         <RouteLoadingBar />
         <Outlet />
         <AccessibilityFab />
+        <LunaChatbot />
       </NarrationProvider>
     </PassportProvider>
   );
