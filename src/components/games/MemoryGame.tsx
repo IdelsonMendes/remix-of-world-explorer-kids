@@ -80,6 +80,7 @@ export function MemoryGame() {
   }, [allMatched, done, moves, setMiniGameScore]);
 
   const flip = (idx: number) => {
+    if (memorizePhase) return;
     if (shuffling) return;
     if (open.length === 2) return;
     if (open.includes(idx)) return;
