@@ -32,20 +32,41 @@ export function MemoryGame() {
   const [moves, setMoves] = useState(0);
   const [done, setDone] = useState(false);
   const [shuffling, setShuffling] = useState(true);
+  const [memorizePhase, setMemorizePhase] = useState(true);
+  const [memorizeCount, setMemorizeCount] = useState(5);
 
   const reset = () => {
     setSeed((s) => s + 1);
     setOpen([]);
     setMoves(0);
     setDone(false);
+    setMemorizePhase(true);
+    setMemorizeCount(5);
   };
 
-  // Refresh deck and play shuffle animation when seed changes
+  // Refresh deck, play shuffle animation and start memorize countdown
   useEffect(() => {
     setDeck(initialDeck);
     setShuffling(true);
-    const t = setTimeout(() => setShuffling(false), 900);
-    return () => clearTimeout(t);
+    setMemorizePhase(true);
+    setMemorizeCount(5);
+
+    const shuffleTimer = setTimeout(() => setShuffling(false), 900);
+
+    let count = 5;
+    const interval = setInterval(() => {
+      count -= 1;
+      setMemorizeCount(count);
+      if (count <= 0) {
+        clearInterval(interval);
+        setMemorizePhase(false);
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(shuffleTimer);
+      clearInterval(interval);
+    };
   }, [initialDeck]);
 
   const allMatched = deck.length > 0 && deck.every((c) => c.matched);
@@ -59,6 +80,7 @@ export function MemoryGame() {
   }, [allMatched, done, moves, setMiniGameScore]);
 
   const flip = (idx: number) => {
+    if (memorizePhase) return;
     if (shuffling) return;
     if (open.length === 2) return;
     if (open.includes(idx)) return;
@@ -101,13 +123,21 @@ export function MemoryGame() {
         </div>
       </div>
 
+      {memorizePhase && (
+        <div className="mt-4 flex items-center justify-center gap-2 rounded-2xl bg-primary/10 border-2 border-primary/30 p-3">
+          <span className="text-lg font-display font-bold text-primary animate-pulse">
+            Memorize as cartas: {memorizeCount}...
+          </span>
+        </div>
+      )}
+
       <div
         className="mt-6 grid grid-cols-3 sm:grid-cols-4 gap-3 sm:gap-4"
         style={{ perspective: 1000 }}
       >
         <AnimatePresence mode="popLayout">
           {deck.map((card, i) => {
-            const isOpen = open.includes(i) || card.matched;
+            const isOpen = memorizePhase || open.includes(i) || card.matched;
             // Shuffle animation: cards fly in from random offsets
             const initialX = ((i * 73) % 11 - 5) * 30;
             const initialY = ((i * 53) % 7 - 3) * 30;
