@@ -320,6 +320,7 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
     if (typeof window === "undefined") return;
     window.speechSynthesis?.cancel();
     setSpeaking(false);
+    clearFallbackTimer();
     clearHighlight();
   }, [clearHighlight]);
 
