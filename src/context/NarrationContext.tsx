@@ -224,6 +224,14 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const fallbackTimerRef = useRef<number | null>(null);
+  const clearFallbackTimer = () => {
+    if (fallbackTimerRef.current != null) {
+      window.clearInterval(fallbackTimerRef.current);
+      fallbackTimerRef.current = null;
+    }
+  };
+
   const speakInternal = useCallback(
     (text: string, opts?: { interrupt?: boolean; element?: HTMLElement | null }) => {
       if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
@@ -231,6 +239,7 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
       const synth = window.speechSynthesis;
       if (opts?.interrupt !== false) {
         synth.cancel();
+        clearFallbackTimer();
         clearHighlight();
       }
       const u = new SpeechSynthesisUtterance(text);
@@ -245,23 +254,62 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
         wrapElementWords(el, text);
       }
 
-      u.onstart = () => setSpeaking(true);
+      let boundaryFired = false;
+      let usingFallback = false;
+
+      const startFallback = () => {
+        if (usingFallback) return;
+        const h = highlightRef.current;
+        if (!h || h.spans.length === 0) return;
+        usingFallback = true;
+        // Estimate ~2.6 words/sec at rate 0.95 (typical Portuguese TTS)
+        const wordsPerSec = 2.6 * (u.rate || 1);
+        const intervalMs = Math.max(180, Math.round(1000 / wordsPerSec));
+        let idx = 0;
+        // Highlight first word immediately
+        highlightAt(h.offsets[0] ?? 0);
+        fallbackTimerRef.current = window.setInterval(() => {
+          idx += 1;
+          if (idx >= h.offsets.length) {
+            clearFallbackTimer();
+            return;
+          }
+          highlightAt(h.offsets[idx]);
+        }, intervalMs);
+      };
+
+      u.onstart = () => {
+        setSpeaking(true);
+        // If onboundary hasn't fired within 400ms, use fallback timer
+        if (wantsHighlight) {
+          window.setTimeout(() => {
+            if (!boundaryFired) startFallback();
+          }, 400);
+        }
+      };
       u.onboundary = (ev: SpeechSynthesisEvent) => {
-        // Some browsers fire 'sentence' or no name; treat all as word-level highlight cue
+        boundaryFired = true;
+        if (usingFallback) {
+          clearFallbackTimer();
+          usingFallback = false;
+        }
         highlightAt(ev.charIndex, (ev as any).charLength);
       };
       u.onend = () => {
         setSpeaking(false);
+        clearFallbackTimer();
         clearHighlight();
       };
       u.onerror = () => {
         setSpeaking(false);
+        clearFallbackTimer();
         clearHighlight();
       };
       synth.speak(u);
     },
     [clearHighlight],
   );
+
 
   const speak = useCallback(
     (text: string, opts?: { interrupt?: boolean }) => speakInternal(text, opts),
