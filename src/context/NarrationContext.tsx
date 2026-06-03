@@ -157,30 +157,123 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
     return () => window.speechSynthesis.removeEventListener?.("voiceschanged", pick);
   }, []);
 
-  const speak = useCallback(
-    (text: string, opts?: { interrupt?: boolean }) => {
+  // Highlight state: element being narrated + restore fn
+  const highlightRef = useRef<{ el: HTMLElement; originalHTML: string; spans: HTMLSpanElement[]; offsets: number[] } | null>(null);
+
+  const clearHighlight = useCallback(() => {
+    const h = highlightRef.current;
+    if (!h) return;
+    try {
+      h.el.innerHTML = h.originalHTML;
+    } catch { /* noop */ }
+    highlightRef.current = null;
+  }, []);
+
+  // Decide if an element is safe to wrap (pure text, no interactive children)
+  const canHighlight = (el: Element | null): el is HTMLElement => {
+    if (!el) return false;
+    const html = el as HTMLElement;
+    // Skip buttons/links/inputs to preserve listeners
+    if (html.querySelector?.("button, a, input, textarea, select, [role='button'], [role='link'], img, svg, video, audio")) return false;
+    const tag = html.tagName;
+    if (!/^(P|H1|H2|H3|H4|H5|H6|LI|SPAN|DIV|BLOCKQUOTE|EM|STRONG|FIGCAPTION|LABEL)$/.test(tag)) return false;
+    const txt = (html.textContent || "").trim();
+    return txt.length > 0 && txt.length <= 1200;
+  };
+
+  const wrapElementWords = (el: HTMLElement, text: string) => {
+    const escapeHtml = (s: string) =>
+      s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const offsets: number[] = [];
+    let html = "";
+    let lastIdx = 0;
+    const re = /\S+/g;
+    let m: RegExpExecArray | null;
+    let wordIdx = 0;
+    while ((m = re.exec(text))) {
+      html += escapeHtml(text.slice(lastIdx, m.index));
+      offsets.push(m.index);
+      html += `<span class="narration-word" data-nw="${wordIdx}">${escapeHtml(m[0])}</span>`;
+      lastIdx = m.index + m[0].length;
+      wordIdx++;
+    }
+    html += escapeHtml(text.slice(lastIdx));
+    const originalHTML = el.innerHTML;
+    el.innerHTML = html;
+    const spans = Array.from(el.querySelectorAll<HTMLSpanElement>(".narration-word"));
+    highlightRef.current = { el, originalHTML, spans, offsets };
+  };
+
+  const highlightAt = (charIndex: number, charLength?: number) => {
+    const h = highlightRef.current;
+    if (!h) return;
+    // Find span whose offset range contains charIndex
+    let active = -1;
+    for (let i = 0; i < h.offsets.length; i++) {
+      if (h.offsets[i] <= charIndex) active = i; else break;
+    }
+    if (active < 0) return;
+    h.spans.forEach((s, i) => {
+      if (i === active) s.classList.add("narration-active");
+      else s.classList.remove("narration-active");
+    });
+    // Scroll into view smoothly
+    const node = h.spans[active];
+    if (node && typeof node.scrollIntoView === "function") {
+      node.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+    }
+  };
+
+  const speakInternal = useCallback(
+    (text: string, opts?: { interrupt?: boolean; element?: HTMLElement | null }) => {
       if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
       if (!text || !text.trim()) return;
       const synth = window.speechSynthesis;
-      if (opts?.interrupt !== false) synth.cancel();
+      if (opts?.interrupt !== false) {
+        synth.cancel();
+        clearHighlight();
+      }
       const u = new SpeechSynthesisUtterance(text);
       u.lang = "pt-BR";
       u.rate = 0.95;
       u.pitch = 1.05;
       if (voiceRef.current) u.voice = voiceRef.current;
+
+      const el = opts?.element;
+      const wantsHighlight = el && canHighlight(el);
+      if (wantsHighlight) {
+        wrapElementWords(el, text);
+      }
+
       u.onstart = () => setSpeaking(true);
-      u.onend = () => setSpeaking(false);
-      u.onerror = () => setSpeaking(false);
+      u.onboundary = (ev: SpeechSynthesisEvent) => {
+        // Some browsers fire 'sentence' or no name; treat all as word-level highlight cue
+        highlightAt(ev.charIndex, (ev as any).charLength);
+      };
+      u.onend = () => {
+        setSpeaking(false);
+        clearHighlight();
+      };
+      u.onerror = () => {
+        setSpeaking(false);
+        clearHighlight();
+      };
       synth.speak(u);
     },
-    [],
+    [clearHighlight],
+  );
+
+  const speak = useCallback(
+    (text: string, opts?: { interrupt?: boolean }) => speakInternal(text, opts),
+    [speakInternal],
   );
 
   const stop = useCallback(() => {
     if (typeof window === "undefined") return;
     window.speechSynthesis?.cancel();
     setSpeaking(false);
-  }, []);
+    clearHighlight();
+  }, [clearHighlight]);
 
   const toggleNarration = useCallback(() => {
     setNarrationOn((on) => {
@@ -190,25 +283,39 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
         speak("Modo narração ativado. Toque em qualquer coisa para ouvir.");
       } else {
         window.speechSynthesis?.cancel();
+        clearHighlight();
       }
       return next;
     });
-  }, [speak]);
+  }, [speak, clearHighlight]);
 
-  // Global click/focus listener — read element when narration on
+  // Find best element to highlight: walk up to a text-content ancestor.
+  const findHighlightTarget = (start: Element | null): HTMLElement | null => {
+    let cur: Element | null = start;
+    for (let i = 0; i < 6 && cur; i++) {
+      if (canHighlight(cur)) return cur as HTMLElement;
+      cur = cur.parentElement;
+    }
+    return null;
+  };
+
+  // Global click listener — read element when narration on
   useEffect(() => {
     if (!narrationOn) return;
     const onPointer = (e: Event) => {
       const target = e.target as Element | null;
       if (!target) return;
-      // Skip the FAB itself to avoid speaking its own controls awkwardly
       if ((target as HTMLElement).closest?.("[data-a11y-fab]")) return;
       const text = getNarratableText(target);
-      if (text) speak(text);
+      if (!text) return;
+      const hl = findHighlightTarget(target);
+      // Only highlight if the element's own text matches what we'll speak
+      const useEl = hl && (hl.textContent || "").trim().replace(/\s+/g, " ") === text.replace(/\s+/g, " ") ? hl : null;
+      speakInternal(text, { element: useEl });
     };
     document.addEventListener("click", onPointer, true);
     return () => document.removeEventListener("click", onPointer, true);
-  }, [narrationOn, speak]);
+  }, [narrationOn, speakInternal]);
 
   // Voice commands via Web Speech Recognition
   const toggleVoiceCommands = useCallback(() => {

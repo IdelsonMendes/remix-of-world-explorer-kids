@@ -185,3 +185,29 @@
 .animate-float-slow { animation: float-slow 5s ease-in-out infinite; }
 .animate-wiggle { animation: wiggle 2.5s ease-in-out infinite; }
 .animate-pop-in { animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* Narration highlight — marca-texto sincronizado com a leitura */
+.narration-word {
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  border-radius: 6px;
+  padding: 0 2px;
+}
+.narration-word.narration-active {
+  background-color: #ffeb3b;
+  color: #1a1a1a;
+  box-shadow: 0 0 0 2px #ffeb3b, 0 2px 6px rgba(0, 0, 0, 0.15);
+  animation: narration-pulse 0.6s ease-in-out;
+}
+@keyframes narration-pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.dark .narration-word.narration-active {
+  background-color: #ffd54f;
+  color: #1a1a1a;
+  box-shadow: 0 0 0 2px #ffd54f, 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+@media (prefers-reduced-motion: reduce) {
+  .narration-word.narration-active { animation: none; }
+}
