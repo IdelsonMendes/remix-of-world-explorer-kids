@@ -357,8 +357,11 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
       const text = getNarratableText(target);
       if (!text) return;
       const hl = findHighlightTarget(target);
-      // Only highlight if the element's own text matches what we'll speak
-      const useEl = hl && (hl.textContent || "").trim().replace(/\s+/g, " ") === text.replace(/\s+/g, " ") ? hl : null;
+      // Loose match: highlight if element text equals or contains spoken text (handles punctuation/whitespace differences)
+      const norm = (s: string) => s.replace(/\s+/g, " ").trim();
+      const elText = hl ? norm(hl.textContent || "") : "";
+      const spoken = norm(text);
+      const useEl = hl && (elText === spoken || elText.includes(spoken) || spoken.includes(elText)) ? hl : null;
       speakInternal(text, { element: useEl });
     };
     document.addEventListener("click", onPointer, true);
