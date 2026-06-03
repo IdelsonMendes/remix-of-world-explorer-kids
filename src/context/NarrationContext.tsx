@@ -68,9 +68,9 @@ function getNarratableText(el: Element | null): string {
     }
     cur = cur.parentElement;
   }
-  // Fallback: own text
+  // Fallback: own text (full text — needed for highlight matching on paragraphs)
   const txt = (node.textContent || "").replace(/\s+/g, " ").trim();
-  return txt.slice(0, 140);
+  return txt.slice(0, 1200);
 }
 
 type NavFn = (path: string) => void;
