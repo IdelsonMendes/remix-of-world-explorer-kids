@@ -432,15 +432,19 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
       const target = e.target as Element | null;
       if (!target) return;
       if ((target as HTMLElement).closest?.("[data-a11y-fab]")) return;
+      const hl = findHighlightTarget(target);
+      // Always auto-highlight when a target is found. Speak the element's raw
+      // textContent so SpeechSynthesisEvent.charIndex aligns with our Ranges.
+      if (hl) {
+        const raw = hl.textContent || "";
+        if (raw.trim()) {
+          speakInternal(raw, { element: hl });
+          return;
+        }
+      }
       const text = getNarratableText(target);
       if (!text) return;
-      const hl = findHighlightTarget(target);
-      // Loose match: highlight if element text equals or contains spoken text (handles punctuation/whitespace differences)
-      const norm = (s: string) => s.replace(/\s+/g, " ").trim();
-      const elText = hl ? norm(hl.textContent || "") : "";
-      const spoken = norm(text);
-      const useEl = hl && (elText === spoken || elText.includes(spoken) || spoken.includes(elText)) ? hl : null;
-      speakInternal(text, { element: useEl });
+      speakInternal(text, { element: null });
     };
     document.addEventListener("click", onPointer, true);
     return () => document.removeEventListener("click", onPointer, true);
