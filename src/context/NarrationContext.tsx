@@ -328,7 +328,7 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
       const el = opts?.element;
       const wantsHighlight = el && canHighlight(el);
       if (wantsHighlight) {
-        wrapElementWords(el, text);
+        setupHighlight(el, text);
       }
 
       let boundaryFired = false;
@@ -337,7 +337,7 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
       const startFallback = () => {
         if (usingFallback) return;
         const h = highlightRef.current;
-        if (!h || h.spans.length === 0) return;
+        if (!h || h.offsets.length === 0) return;
         usingFallback = true;
         // Estimate ~2.6 words/sec at rate 0.95 (typical Portuguese TTS)
         const wordsPerSec = 2.6 * (u.rate || 1);
