@@ -157,28 +157,85 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
     return () => window.speechSynthesis.removeEventListener?.("voiceschanged", pick);
   }, []);
 
-  // Highlight state: element being narrated + restore fn
-  const highlightRef = useRef<{ el: HTMLElement; originalHTML: string; spans: HTMLSpanElement[]; offsets: number[] } | null>(null);
+  // Highlight state. Two strategies:
+  //  1) CSS Custom Highlight API (preferred) — zero DOM mutation, no reflow.
+  //  2) Fallback: wrap words in <span> via innerHTML (mutates DOM, may reflow).
+  type HighlightState = {
+    el: HTMLElement;
+    offsets: number[];
+    originalHTML?: string;
+    spans?: HTMLSpanElement[];
+    ranges?: Range[];
+    highlightName?: string;
+  };
+  const highlightRef = useRef<HighlightState | null>(null);
+
+  const supportsCssHighlights = (): boolean => {
+    return typeof window !== "undefined" && typeof (window as any).CSS !== "undefined"
+      && !!(window as any).CSS.highlights && typeof (window as any).Highlight === "function";
+  };
 
   const clearHighlight = useCallback(() => {
     const h = highlightRef.current;
     if (!h) return;
     try {
-      h.el.innerHTML = h.originalHTML;
+      if (h.highlightName && supportsCssHighlights()) {
+        (window as any).CSS.highlights.delete(h.highlightName);
+      } else if (h.originalHTML != null) {
+        h.el.innerHTML = h.originalHTML;
+      }
     } catch { /* noop */ }
     highlightRef.current = null;
   }, []);
 
-  // Decide if an element is safe to wrap (pure text, no interactive children)
+  // Decide if an element is safe to highlight.
   const canHighlight = (el: Element | null): el is HTMLElement => {
     if (!el) return false;
     const html = el as HTMLElement;
-    // Skip buttons/links/inputs to preserve listeners
-    if (html.querySelector?.("button, a, input, textarea, select, [role='button'], [role='link'], img, svg, video, audio")) return false;
     const tag = html.tagName;
-    if (!/^(P|H1|H2|H3|H4|H5|H6|LI|SPAN|DIV|BLOCKQUOTE|EM|STRONG|FIGCAPTION|LABEL)$/.test(tag)) return false;
+    if (!/^(P|H1|H2|H3|H4|H5|H6|LI|SPAN|DIV|BLOCKQUOTE|EM|STRONG|FIGCAPTION|LABEL|A|BUTTON)$/.test(tag)) return false;
     const txt = (html.textContent || "").trim();
-    return txt.length > 0 && txt.length <= 1200;
+    if (!txt || txt.length > 1200) return false;
+    // For the span-fallback path only, avoid mutating elements with interactive descendants
+    if (!supportsCssHighlights()) {
+      if (html.querySelector?.("button, a, input, textarea, select, [role='button'], [role='link'], img, svg, video, audio")) return false;
+    }
+    return true;
+  };
+
+  // Build per-word Ranges using the CSS Custom Highlight API (no DOM mutation).
+  const setupHighlightRanges = (el: HTMLElement): boolean => {
+    try {
+      const win = window as any;
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const ranges: Range[] = [];
+      const offsets: number[] = [];
+      let globalIdx = 0;
+      let node = walker.nextNode() as Text | null;
+      while (node) {
+        const text = node.nodeValue || "";
+        const re = /\S+/g;
+        let m: RegExpExecArray | null;
+        while ((m = re.exec(text))) {
+          const r = document.createRange();
+          r.setStart(node, m.index);
+          r.setEnd(node, m.index + m[0].length);
+          ranges.push(r);
+          offsets.push(globalIdx + m.index);
+        }
+        globalIdx += text.length;
+        node = walker.nextNode() as Text | null;
+      }
+      if (ranges.length === 0) return false;
+      const name = "narration-active";
+      win.CSS.highlights.delete(name);
+      const hl = new win.Highlight();
+      win.CSS.highlights.set(name, hl);
+      highlightRef.current = { el, ranges, offsets, highlightName: name };
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   const wrapElementWords = (el: HTMLElement, text: string) => {
@@ -204,23 +261,43 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
     highlightRef.current = { el, originalHTML, spans, offsets };
   };
 
-  const highlightAt = (charIndex: number, charLength?: number) => {
+  const setupHighlight = (el: HTMLElement, text: string): boolean => {
+    if (supportsCssHighlights() && setupHighlightRanges(el)) return true;
+    try { wrapElementWords(el, text); return true; } catch { return false; }
+  };
+
+  const highlightAt = (charIndex: number, _charLength?: number) => {
     const h = highlightRef.current;
     if (!h) return;
-    // Find span whose offset range contains charIndex
     let active = -1;
     for (let i = 0; i < h.offsets.length; i++) {
       if (h.offsets[i] <= charIndex) active = i; else break;
     }
-    if (active < 0) return;
-    h.spans.forEach((s, i) => {
-      if (i === active) s.classList.add("narration-active");
-      else s.classList.remove("narration-active");
-    });
-    // Scroll into view smoothly
-    const node = h.spans[active];
-    if (node && typeof node.scrollIntoView === "function") {
-      node.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+    if (active < 0) active = 0;
+
+    if (h.highlightName && h.ranges && supportsCssHighlights()) {
+      try {
+        const win = window as any;
+        const hl = win.CSS.highlights.get(h.highlightName);
+        if (hl) { hl.clear(); hl.add(h.ranges[active]); }
+        const rect = h.ranges[active].getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        if (rect.bottom < 0 || rect.top > vh) {
+          h.el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      } catch { /* noop */ }
+      return;
+    }
+
+    if (h.spans) {
+      h.spans.forEach((s, i) => {
+        if (i === active) s.classList.add("narration-active");
+        else s.classList.remove("narration-active");
+      });
+      const node = h.spans[active];
+      if (node && typeof node.scrollIntoView === "function") {
+        node.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+      }
     }
   };
 
@@ -251,7 +328,7 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
       const el = opts?.element;
       const wantsHighlight = el && canHighlight(el);
       if (wantsHighlight) {
-        wrapElementWords(el, text);
+        setupHighlight(el, text);
       }
 
       let boundaryFired = false;
@@ -260,7 +337,7 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
       const startFallback = () => {
         if (usingFallback) return;
         const h = highlightRef.current;
-        if (!h || h.spans.length === 0) return;
+        if (!h || h.offsets.length === 0) return;
         usingFallback = true;
         // Estimate ~2.6 words/sec at rate 0.95 (typical Portuguese TTS)
         const wordsPerSec = 2.6 * (u.rate || 1);
@@ -355,15 +432,19 @@ export function NarrationProvider({ children }: { children: ReactNode }) {
       const target = e.target as Element | null;
       if (!target) return;
       if ((target as HTMLElement).closest?.("[data-a11y-fab]")) return;
+      const hl = findHighlightTarget(target);
+      // Always auto-highlight when a target is found. Speak the element's raw
+      // textContent so SpeechSynthesisEvent.charIndex aligns with our Ranges.
+      if (hl) {
+        const raw = hl.textContent || "";
+        if (raw.trim()) {
+          speakInternal(raw, { element: hl });
+          return;
+        }
+      }
       const text = getNarratableText(target);
       if (!text) return;
-      const hl = findHighlightTarget(target);
-      // Loose match: highlight if element text equals or contains spoken text (handles punctuation/whitespace differences)
-      const norm = (s: string) => s.replace(/\s+/g, " ").trim();
-      const elText = hl ? norm(hl.textContent || "") : "";
-      const spoken = norm(text);
-      const useEl = hl && (elText === spoken || elText.includes(spoken) || spoken.includes(elText)) ? hl : null;
-      speakInternal(text, { element: useEl });
+      speakInternal(text, { element: null });
     };
     document.addEventListener("click", onPointer, true);
     return () => document.removeEventListener("click", onPointer, true);

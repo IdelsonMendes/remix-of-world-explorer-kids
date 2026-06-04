@@ -211,3 +211,13 @@
 @media (prefers-reduced-motion: reduce) {
   .narration-word.narration-active { animation: none; }
 }
+
+/* CSS Custom Highlight API — zero DOM mutation, no layout reflow */
+::highlight(narration-active) {
+  background-color: #ffeb3b;
+  color: #1a1a1a;
+}
+.dark ::highlight(narration-active) {
+  background-color: #ffd54f;
+  color: #1a1a1a;
+}
