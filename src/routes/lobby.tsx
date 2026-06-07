@@ -317,7 +317,7 @@ function LobbyPage() {
   );
 }
 
-function Stat({ icon, value, label }: { icon: string; value: string; label: string }) {
+function Stat({ icon, value, label }: Readonly<{ icon: string; value: string; label: string }>) {
   return (
     <div className="rounded-2xl bg-muted/50 p-3 min-w-[90px]">
       <div className="text-2xl">{icon}</div>

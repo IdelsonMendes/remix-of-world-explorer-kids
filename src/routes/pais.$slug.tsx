@@ -1,7 +1,18 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Gamepad2, Check, Stamp as StampIcon, Trophy, Sparkles, Volume2, VolumeX, PartyPopper, Video as VideoIcon } from "lucide-react";
+import {
+  BookOpen,
+  Gamepad2,
+  Check,
+  Stamp as StampIcon,
+  Trophy,
+  Sparkles,
+  Volume2,
+  VolumeX,
+  PartyPopper,
+  Video as VideoIcon,
+} from "lucide-react";
 import { AdventureVideos } from "@/components/AdventureVideos";
 import { COUNTRIES } from "@/data/countries";
 import { COUNTRY_EXTRAS } from "@/data/countryExtras";
@@ -40,7 +51,10 @@ export const Route = createFileRoute("/pais/$slug")({
       <div>
         <h1 className="text-2xl font-bold">Ops! Algo se perdeu na bagagem 😢</h1>
         <p className="mt-2 text-foreground/70">{error.message}</p>
-        <Link to="/" className="mt-6 inline-flex rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold">
+        <Link
+          to="/"
+          className="mt-6 inline-flex rounded-full bg-primary text-primary-foreground px-6 py-3 font-bold"
+        >
           Voltar ao início
         </Link>
       </div>
@@ -83,13 +97,15 @@ function CountryPage() {
   const ready = storyRead[country.slug] && gamesDone[country.slug];
 
   useEffect(() => {
-    if (ready && !hasStamp(country.slug)) {
-      addStamp(country.slug);
-      setShowStampToast(true);
-      play("celebrate");
-      const t = setTimeout(() => setShowStampToast(false), 4500);
-      return () => clearTimeout(t);
-    }
+    if (!ready) return;
+    if (hasStamp(country.slug)) return;
+
+    addStamp(country.slug);
+    setShowStampToast(true);
+    play("celebrate");
+
+    const t = setTimeout(() => setShowStampToast(false), 4500);
+    return () => clearTimeout(t);
   }, [ready, country.slug, hasStamp, addStamp, play]);
 
   return (
@@ -176,9 +192,7 @@ function CountryPage() {
               extras={COUNTRY_EXTRAS[country.slug]}
             />
           )}
-          {tab === "videos" && (
-            <AdventureVideos countryName={country.name} color={country.color} />
-          )}
+          {tab === "videos" && <AdventureVideos countryName={country.name} color={country.color} />}
           {tab === "bandeira" && (
             <QuizGame
               key={`flag-${country.slug}`}
@@ -197,12 +211,8 @@ function CountryPage() {
           )}
         </div>
 
-
         {/* Combined games tracker */}
-        <GamesTracker
-          countrySlug={country.slug}
-          onAllDone={() => markGamesDone(country.slug)}
-        />
+        <GamesTracker countrySlug={country.slug} onAllDone={() => markGamesDone(country.slug)} />
 
         {/* Stamp earned toast */}
         <AnimatePresence>
@@ -216,7 +226,8 @@ function CountryPage() {
               <div className="text-3xl">{country.emoji}</div>
               <div>
                 <div className="font-display font-bold">
-                  Você ganhou um novo carimbo no passaporte{explorerName ? `, ${explorerName}` : ""}! 🎉
+                  Você ganhou um novo carimbo no passaporte{explorerName ? `, ${explorerName}` : ""}
+                  ! 🎉
                 </div>
                 <div className="text-sm opacity-90">
                   {country.name} agora faz parte da sua aventura!
@@ -231,13 +242,15 @@ function CountryPage() {
   );
 }
 
-function ProgressPill({ done, icon, label }: { done: boolean; icon: string; label: string }) {
+function ProgressPill({
+  done,
+  icon,
+  label,
+}: Readonly<{ done: boolean; icon: string; label: string }>) {
   return (
     <div
       className={`flex items-center gap-3 rounded-2xl px-4 py-3 border-2 ${
-        done
-          ? "bg-[var(--mint)]/30 border-[var(--mint)]"
-          : "bg-card border-border/50"
+        done ? "bg-[var(--mint)]/30 border-[var(--mint)]" : "bg-card border-border/50"
       }`}
     >
       <span className="text-xl">{icon}</span>
@@ -255,11 +268,11 @@ function TabButton({
   active,
   onClick,
   children,
-}: {
+}: Readonly<{
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <button
       onClick={onClick}
@@ -278,11 +291,11 @@ function StorySection({
   paragraphs,
   done,
   onFinish,
-}: {
+}: Readonly<{
   paragraphs: string[];
   done: boolean;
   onFinish: () => void;
-}) {
+}>) {
   return (
     <div className="rounded-3xl bg-card p-6 sm:p-8 border-2 border-border/40 shadow-soft">
       <h2 className="text-2xl font-display font-bold flex items-center gap-2">
@@ -323,12 +336,12 @@ function QuizGame({
   title,
   questions,
   quizKey,
-}: {
+}: Readonly<{
   title: string;
   questions: QuizQ[];
   quizKey: string;
   onWin?: () => void;
-}) {
+}>) {
   const savedProgress = quizProgress[quizKey];
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
@@ -380,7 +393,8 @@ function QuizGame({
           <div className="text-5xl">🎉</div>
           <h3 className="mt-3 text-2xl font-display font-bold">{title} concluído!</h3>
           <p className="mt-2 text-foreground/70">
-            Você acertou <strong>{finalScore}</strong> de <strong>{questions.length}</strong>. Mandou bem!
+            Você acertou <strong>{finalScore}</strong> de <strong>{questions.length}</strong>.
+            Mandou bem!
           </p>
           <button
             onClick={reset}
@@ -404,7 +418,7 @@ function QuizGame({
       <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden">
         <div
           className="h-full bg-gradient-sunset transition-all"
-          style={{ width: `${((idx) / questions.length) * 100}%` }}
+          style={{ width: `${(idx / questions.length) * 100}%` }}
         />
       </div>
       <p className="mt-6 text-xl font-semibold">{q.question}</p>
@@ -447,6 +461,7 @@ function GamesTracker({
   const flagKey = `flag-${countrySlug}`;
   const triviaKey = `trivia-${countrySlug}`;
 
+  const firedRef = useRef(false);
   const [version, setVersion] = useState(0);
 
   useEffect(() => {
@@ -461,7 +476,11 @@ function GamesTracker({
   );
 
   useEffect(() => {
-    if (bothDone) onAllDone();
+    if (!bothDone) return;
+    if (firedRef.current) return;
+
+    firedRef.current = true;
+    onAllDone();
   }, [bothDone, onAllDone]);
 
   return null;
@@ -473,11 +492,11 @@ function ChildStorySection({
   countryName,
   color,
   extras,
-}: {
+}: Readonly<{
   countryName: string;
   color: string;
   extras: (typeof COUNTRY_EXTRAS)[CountrySlug];
-}) {
+}>) {
   const { speak, stop, speaking } = useNarration();
   const story = extras.childStory;
 
@@ -499,7 +518,8 @@ function ChildStorySection({
       >
         <div className="text-3xl">🌟</div>
         <p className="text-base sm:text-lg font-semibold text-foreground/85">
-          <strong>Luna Matias diz:</strong> “Bora viajar com a imaginação por uma história de {countryName}? Senta pertinho e escuta!”
+          <strong>Luna Matias diz:</strong> “Bora viajar com a imaginação por uma história de{" "}
+          {countryName}? Senta pertinho e escuta!”
         </p>
       </div>
 
@@ -554,11 +574,11 @@ function LocalGameSection({
   countryName,
   color,
   extras,
-}: {
+}: Readonly<{
   countryName: string;
   color: string;
   extras: (typeof COUNTRY_EXTRAS)[CountrySlug];
-}) {
+}>) {
   const { speak, stop, speaking } = useNarration();
   const game = extras.localGame;
   const [taps, setTaps] = useState(0);
@@ -597,7 +617,8 @@ function LocalGameSection({
       >
         <div className="text-3xl">🎉</div>
         <p className="text-base sm:text-lg font-semibold text-foreground/85">
-          <strong>Luna Matias diz:</strong> “As crianças de {countryName} amam essa brincadeira! Vem aprender comigo e brincar aqui também!”
+          <strong>Luna Matias diz:</strong> “As crianças de {countryName} amam essa brincadeira! Vem
+          aprender comigo e brincar aqui também!”
         </p>
       </div>
 
@@ -649,7 +670,10 @@ function LocalGameSection({
       {/* Mini-jogo interativo */}
       <div className="mt-6 rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-transparent p-5 sm:p-6">
         <h3 className="font-display font-bold text-lg flex items-center gap-2">
-          🎮 Bora brincar! <span className="text-sm font-normal text-foreground/60">— {game.interaction.prompt}</span>
+          🎮 Bora brincar!{" "}
+          <span className="text-sm font-normal text-foreground/60">
+            — {game.interaction.prompt}
+          </span>
         </h3>
 
         <div className="mt-4 h-3 rounded-full bg-muted overflow-hidden">

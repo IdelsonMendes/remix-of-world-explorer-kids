@@ -36,7 +36,7 @@ REGRAS:
 4. Mantenha respostas curtas (no máximo 4 frases).`;
 
 export const askLuna = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => InputSchema.parse(data))
+  .validator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }) => {
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("LOVABLE_API_KEY não configurada");
@@ -50,10 +50,7 @@ export const askLuna = createServerFn({ method: "POST" })
       },
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          ...data.messages,
-        ],
+        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...data.messages],
       }),
     });
 
