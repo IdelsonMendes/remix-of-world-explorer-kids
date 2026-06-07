@@ -218,10 +218,9 @@ npm run build
 
 ## Contribuidores
 
-Lista de contribuidores do projeto. Substitua os placeholders pelos perfis reais conforme o time crescer.
-
-- Nome do Colaborador — <https://github.com/usuario>
-- Nome do Colaborador — <https://github.com/usuario>
+- Idelson Mendes Neto — https://github.com/IdelsonMendes
+- Igor Lumertz Loureiro — https://github.com/IgorLoureiro
+- Nathan Leal Locatelli — https://github.com/Locatelli10
 
 ## Segurança
 
