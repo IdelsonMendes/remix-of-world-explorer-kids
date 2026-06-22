@@ -36,7 +36,7 @@ REGRAS:
 4. Mantenha respostas curtas (no máximo 4 frases).`;
 
 export const askLuna = createServerFn({ method: "POST" })
-  .validator((data: unknown) => InputSchema.parse(data))
+  .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }) => {
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("LOVABLE_API_KEY não configurada");
